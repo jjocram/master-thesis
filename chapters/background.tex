@@ -1,11 +1,27 @@
-    \documentclass[../thesis.tex]{subfiles}
+\documentclass[../thesis.tex]{subfiles}
 \begin{document}
 \chapter{Background}\label{cap:background}
 
 \section{Human-Robot Interaction}
 
 \section{Hand gesture recognition}
-The hand gesture recognition task is a well-studied task. In the literature is possible to find the idea to use the hand gesture as a way to interact with a machine since 1987~\cite{article:hand_gesture_interface_device}. At that time the idea was to use a glove to recognize the position and the orientation of the user's hand. They were thought to be used for different tasks like gesture recognition, an interface to a visual programming language, virtual object manipulation, and many others. Nowadays, the idea to use a third-party device to recognize what the hands are doing is losing interest in the community, especially thanks to the increase of computing power and the improved quality of video acquisition devices. Thanks to these improvements, and the study of computer vision and machine learning techniques, it is possible to reach a good level of accuracy with only a webcam.
-% Talk about datasets, evaluation methods and what are the latest results
+The hand gesture recognition task is a well-studied task. In the literature is possible to find the idea to use the hand gesture as a way to interact with a machine since 1987~\cite{article:hand_gesture_interface_device}. At that time the idea was to use a glove to recognize the position and the orientation of the user's hand. They were thought to be used for different tasks like gesture recognition, an interface to a visual programming language, virtual object manipulation, and many others. Nowadays, even if a third-party device to recognize what the hands are doing is highly accurate and precise, for some tasks it is possible to reach a good level of accuracy with only a webcam. Especially, thanks to the increase of computing power, also in small devices, and the improved quality of video acquisition devices, the study of computer vision and machine learning techniques to recognize hand gestures s becoming very interesting.
+
+\subsection{Machine learning}
+Recognizing a hand gesture given an image or a frame of a video is not something easily algorithmizable. For this, the idea of using a neural network to fulfill the task is a good one.
+\subsubsection{Dataset}
+When \acrshort{ML} is involved, the challenge is the need for big datasets on which the network can train. When image recognition is the task to fulfill the datasets are composed of a lot of images and each one must be labeled to know what it is representing and where, inside the image, the position of the object to detect is. This kind of training is known as supervised learning which is different from the unsupervised in which the dataset has no labels and usually the task is to categorize the elements into macro-categories.
+\subsubsection{Evaluation}
+To evaluate a \acrshort{ML} model is necessary to collect some data during the training process. The metrics to keep track of are:
+\begin{itemize}
+    \item \textbf{loss function}: what the network aims to minimize. Generally, it represents the prediction error with respect to the ground truth.
+    \item \textbf{accuracy}: is the ratio between the number of correct predictions, and the total number of predictions made.
+        \begin{equation}
+                Accuracy = \frac{Number\, of\, right\, predictions}{Number\, of\, predictions}
+        \end{equation}
+    \item \textbf{time}: the time spent on training the network. It depends on the dataset size and the complexity of the network. Specifically, a bigger dataset will require more time but will give better results as well as a more complex network.
+\end{itemize}
+The best neural network is the one that guarantees the best trade-off between these metrics.
+% Talk about the latest results in the research
 
 \end{document}
