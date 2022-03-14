@@ -1,0 +1,36 @@
+\documentclass[../thesis.tex]{subfiles}
+\begin{document}
+\chapter{System design and implementation}\label{cap:system_design_and_implementation}
+
+
+\begin{itemize}
+    \item \textbf{$q_0$}: robot without package; 
+    \item \textbf{$q_1$}: robot waiting for package id; 
+    \item \textbf{$q_2$}: robot waiting for a ``direction'' without a package;
+    \item \textbf{$q_3$}: robot with a package;
+    \item \textbf{$q_4$}: robot waiting for a ``direction'' with a package.
+\end{itemize}
+\begin{figure}[h]
+    \centering
+    \resizebox{0.5\textwidth}{!}{%
+    \begin{tikzpicture}[node distance = 4cm, on grid]
+        \node (q0) [state, initial, accepting] {$q_0$};
+        \node (q1) [state, above right = of q0] {$q_1$};
+        \node (q3) [state, right = of q1] {$q_3$};
+        \node (q4) [state, below right = of q1] {$q_4$};
+        \node (q2) [state, below right = of q0] {$q_2$};
+
+        \path [-stealth, thick]
+            (q0) edge node[below right] {pick up} (q1)
+            (q1) edge node[auto] {[A-Z]} (q3)
+            (q1) edge node[auto] {go to} (q4)
+            (q4) edge [bend left, auto] node {[A-Z]} (q1)
+            (q0) edge node[auto] {go to} (q2)
+            (q2) edge [bend left, auto] node {[A-Z]} (q0)
+            (q3) edge [in=90,out=120,above,distance=3cm, auto] node[above left] {drop down} (q0);
+    \end{tikzpicture}%
+}
+    \caption{Automata diagram for commands}
+    \label{fig:automata_for_commands}
+\end{figure}
+\end{document}

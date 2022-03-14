@@ -6,6 +6,7 @@
 \usepackage{subfiles}
 \usepackage{bookmark}
 \usepackage{caption}
+\usepackage{subcaption}
 \usepackage{chngpage,calc}
 \usepackage{csquotes}
 \usepackage{emptypage}
@@ -19,7 +20,6 @@
 \usepackage{mparhack,fixltx2e,relsize}
 \usepackage{nameref}
 \usepackage[font=small]{quoting}
-\usepackage{subfig}
 \usepackage[english]{varioref}
 \usepackage[dvipsnames]{xcolor}
 \usepackage[a-1b]{pdfx}
@@ -27,6 +27,10 @@
 \usepackage{tabularx}
 \usepackage{longtable}
 \usepackage{ltxtable}
+%Draw automata
+\usepackage{tikz}
+\usetikzlibrary{automata, arrows.meta, positioning}
+
 \usepackage[toc, acronym]{glossaries}
 \usepackage[backend=biber,style=numeric-comp,hyperref,backref,maxbibnames=9,maxcitenames=2]{biblatex}
 
@@ -45,6 +49,7 @@
 \subfile{chapters/introduction}
 \subfile{chapters/background}
 \subfile{chapters/technologies_and_tools}
+%\subfile{chapters/system_design_and_implementation}
 
 \backmatter
 \printglossaries
