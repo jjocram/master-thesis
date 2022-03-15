@@ -42,6 +42,12 @@ Starting from this assumptions a finite state automata can be used to check the 
 \end{figure}
 
 \section{Hand gesture recognizer}
+Two types of hand gestures have been considerated:
+\begin{itemize}
+    \item \textbf{Static hand gestures}: in which the hand doens't move and only a snapshot of the position of the fingers is sufficient to recognize the gesture;
+    \item \textbf{Dynamic hand gesture}: in wich the hand performs a movement. In this case, a sequence of data is necessary to recognize the gesture. 
+\end{itemize}
+This diversity leads to two different neural networks to classify the hand gesture the user is doing.
 
 \subsection{Static hand gestures}
 
