@@ -8,6 +8,9 @@ Tensorflow is an open-source Python library to build \acrshort{ML} models. Googl
 \subsection{Tensorflow lite}
 Tensorflow lite is a component of Tensorflow that allows to convert a Tensorflow model into a compressed flat buffer and then deploy it into any device (e.g.\ mobile devices or embedded device). With the goal of deploying the hand gesture recognizer to a Nvidia Jetson, the use of this tool is natural.
 
+\subsection{Keras}
+Keras takes advantages of Tensorflow to give to the user a powerful API to design and develop Deep Neural Networks. With a few lines of code is possible to implement complex neural networks that exploit the latest researches in the field of \gls{ML}.
+
 \section{MediaPipe}\label{sec:mediapipe}
 MediaPipe is an open-source, real-time, and on-device tool that can track multiple parts of the body. In particular, I am interested in hand tracking. MediaPipe suits very well for this purpose because it offers a pre-trained \acrshort{ML} model to recognize and track twenty-one landmarks on each hand (figure~\ref{fig:landmarksMediapipe}). In particular, it uses a pipeline composed of two \acrshort{ML} models:
 \begin{enumerate}
