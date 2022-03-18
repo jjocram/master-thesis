@@ -23,7 +23,7 @@ MediaPipe is an open-source, real-time, and on-device tool that can track multip
     \caption{Landmarks on a hand recognized by MediaPipe~\cite{site:mediapipe}}
     \label{fig:landmarksMediapipe}
 \end{figure}
-The precision of this tool is about $96\%$~\cite{article:mediapipe} so, it is a good starting point for the hand gesture recognition task. It is possible to get the position of the landmarks and give them in input at a Deep Neural Network trained on the gestures of our interest.\\
+The precision of this tool is about $96\%$~\cite{paper:mediapipe} so, it is a good starting point for the hand gesture recognition task. It is possible to get the position of the landmarks and give them in input at a Deep Neural Network trained on the gestures of our interest.\\
 What MediaPipe returns is the list of coordinates relatives at the 2.5D position of hand's landmarks. These coordinates can be saved and used to train a deep neural network instead images, reducing the size of the dataset.\\
 It is interesting to point out that MediaPipe is capable to track, in real-time, different parts of a human body, for example, the face and the whole body.~\cite{site:mediapipe}
 
@@ -84,7 +84,7 @@ It uses both topics and services. The functionality is similar to service with t
 The implementation of \gls{DDS} is hidden from the user, who uses the three methods described above with the \gls{ROS} API to exchange messages. More information can be found on the article written by \citeauthor{site:ros_dds}~\cite{site:ros_dds}.
 
 \subsection{Navigation}
-``Nav 2'' is the navigation system provided by \gls{ROS}. A developer can chose to use their own navigation system but the one developed by ~\citeauthor{paper:navigation2} is widely tested and supported~\cite{paper:navigation2}. 
+``Nav 2'' is the navigation system provided by \gls{ROS}. A developer can chose to use their own navigation system but the one developed by~\citeauthor{paper:navigation2} is widely tested and supported~\cite{paper:navigation2}. 
 
 \section{Gazebo simulator}
 Gazebo is an open-source simulator that allows simulating environments where robots are involved. Gazebo offers the ability to accurately and efficiently simulate populations of robots in complex indoor and outdoor environments. Moreover, there is the possibility to use different robot models using \glsfirst{SDF} file and to import Collada file into the simulated world. Gazebo is also expandable with plugins. One of those allows using \acrshort{ROS} to communicate with the robots inside the simulation. I used the Gazebo simulator to perform some tests before deploying the software in a real environment. 
