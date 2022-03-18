@@ -1,6 +1,6 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
-\chapter{System design and implementation}\label{cap:system_design_and_implementation}
+\chapter{System design and implementation}\label{cap:system-design-and-implementation}
 The systems is composed of two components: a node that deals with the hand gesture recognition and a node representing the robot to be controlled. The tasks that the robot must perform are:
 \begin{itemize}
     \item Pick up a parcel;
@@ -17,7 +17,7 @@ Starting from this assumptions a finite state automata can be used to check the 
     \item \textbf{$q_4$}: robot waiting for a ``direction'' with a parcel.
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \resizebox{0.8\textwidth}{!}{%
     \begin{tikzpicture}[node distance = 4cm, on grid]
@@ -37,15 +37,15 @@ Starting from this assumptions a finite state automata can be used to check the 
             (q3) edge [in=90,out=120,above,distance=3cm, auto] node[above left] {drop down} (q0);
     \end{tikzpicture}%
 }
-    \caption{Automata diagram for commands.}
-    \label{fig:automata_for_commands}
+    \caption{Automata diagram for commands.}\label{fig:automata_for_commands}
 \end{figure}
+\gls{ROS} and its communication layer (i.e. exchange of messages) has to be used for the node implementation in order to comply with the requirement of interoperability between robots. For this reason, the hand gesture recognizer must be encapsulated inside a \gls{ROS} node.
 
 \section{Hand gesture recognizer}
-Two types of hand gestures have been considerated:
+Two types of hand gestures have been considerate:
 \begin{itemize}
-    \item \textbf{Static hand gestures}: in which the hand doens't move and only a snapshot of the position of the fingers is sufficient to recognize the gesture;
-    \item \textbf{Dynamic hand gesture}: in wich the hand performs a movement. In this case, a sequence of data is necessary to recognize the gesture. 
+    \item \textbf{Static hand gestures}: in which the hand doesn't move and only a snapshot of the position of the fingers is sufficient to recognize the gesture;
+    \item \textbf{Dynamic hand gesture}: in which the hand performs a movement. In this case, a sequence of data is necessary to recognize the gesture. 
 \end{itemize}
 This diversity leads to two different neural networks to classify the hand gesture the user is doing.
 
