@@ -1,14 +1,14 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
 \chapter{System design and implementation}\label{cap:system-design-and-implementation}
-The systems is composed of two components: a node that deals with the hand gesture recognition and a node representing the robot to be controlled. The tasks that the robot must perform are:
+The system is composed of two components: a node that deals with  hand gesture recognition and a node representing the robot to be controlled. The tasks that the robot must perform are:
 \begin{itemize}
     \item Pick up a parcel;
     \item Drop down a parcel;
     \item Go to a predetermined position.
 \end{itemize}
 A letter identified positions and parcels. In this way, the \glsfirst{ASL} is exploitable in order to simulate the identification of positions and parcels.\\
-Starting from this assumptions a finite state automata can be used to check the correctness of the input. Figure~\ref{fig:automata_for_commands} shows a possible automata with this purpose. The alphabet is $\Sigma = \{[A-Z], go\, to, pick\, up, drop\, down\}$ and the states are:
+Starting from these assumptions a finite state automataton can be used to check the correctness of the input. Figure~\ref{fig:automata_for_commands} shows the transition diagram for a possible automataton with this purpose. The alphabet is $\Sigma = \{[A-Z], go\, to, pick\, up, drop\, down\}$ and the states are:
 \begin{itemize}
     \item \textbf{$q_0$}: robot without parcel; 
     \item \textbf{$q_1$}: robot waiting for parcel id; 
@@ -39,10 +39,10 @@ Starting from this assumptions a finite state automata can be used to check the 
 }
     \caption{Automata diagram for commands.}\label{fig:automata_for_commands}
 \end{figure}
-\gls{ROS} and its communication layer (i.e. exchange of messages) has to be used for the node implementation in order to comply with the requirement of interoperability between robots. For this reason, the hand gesture recognizer must be encapsulated inside a \gls{ROS} node.
+\gls{ROS} and its communication layer (i.e. exchange of messages) have to be used for the node implementation in order to comply with the requirement of interoperability between robots. For this reason, the hand gesture recognizer must be encapsulated inside a \gls{ROS} node.
 
 \section{Hand gesture recognizer}
-Two types of hand gestures have been considerate:
+Two types of hand gestures have been considered:
 \begin{itemize}
     \item \textbf{Static hand gestures}: in which the hand doesn't move and only a snapshot of the position of the fingers is sufficient to recognize the gesture;
     \item \textbf{Dynamic hand gesture}: in which the hand performs a movement. In this case, a sequence of data is necessary to recognize the gesture. 
@@ -50,7 +50,7 @@ Two types of hand gestures have been considerate:
 This diversity leads to two different neural networks to classify the hand gesture the user is doing.
 
 \subsection{Static hand gestures}
-The set of static hand gestures chose is the one of the \gls{ASL}, \textit{J} and \textit{Z} excluded because they involve a movement and a function to discriminate between a static letter and a dynamic letter is described in~\ref{TODO}.
+The set of static hand gestures chosen is the \gls{ASL}, \textit{J} and \textit{Z} excluded because they involve a movement. To discriminate between dynamic and static gestures, I decided to prioritize the dynamic ones because the user has to perform an action to activate them. Instead, with the static gestures, the hand doesn't move, and the recognizer will always return a prediction.
 %Add a photo for each gesture
 \subsubsection{MediaPipe data}
 
