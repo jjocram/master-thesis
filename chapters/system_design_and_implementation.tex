@@ -47,11 +47,31 @@ Two types of hand gestures have been considered:
     \item \textbf{Static hand gestures}: in which the hand doesn't move and only a snapshot of the position of the fingers is sufficient to recognize the gesture;
     \item \textbf{Dynamic hand gesture}: in which the hand performs a movement. In this case, a sequence of data is necessary to recognize the gesture. 
 \end{itemize}
-This diversity leads to two different neural networks to classify the hand gesture the user is doing.
+This diversity leads to two different neural networks to classify the hand gesture the user is doing.\\
+The hand gesture recognizer has been developed starting from the project of~\citeauthor{site:hand_gesture_base_repo}~\cite{site:hand_gesture_base_repo} to which several improvements have been made. Figure~\ref{fig:interface} shows the user interface of the hand gesture recognizer. In which, the following components are recognizable:
+\begin{itemize}
+    \item the hand tracker's landmarks: the black dots inside the green rectangle;
+    \item the history of landmarks to recognize dynamic gestures: the green dots inside the green rectangle;
+    \item the recognized static hand gesture: the letter inside the orange rectangle;
+    \item the recognized dynamic hand gesture: the word inside the pink rectangle;
+    \item the number of frame per seconds: the number inside the red rectangle.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{example_interface.png}
+    \caption{User interface of the hand gesture recognizer.}\label{fig:interface}
+\end{figure}
 
 \subsection{Static hand gestures}
-The set of static hand gestures chosen is the \gls{ASL}, \textit{J} and \textit{Z} excluded because they involve a movement. To discriminate between dynamic and static gestures, I decided to prioritize the dynamic ones because the user has to perform an action to activate them. Instead, with the static gestures, the hand doesn't move, and the recognizer will always return a prediction.
-%Add a photo for each gesture
+The set of static hand gestures chosen is the \gls{ASL} (in figure~\ref{fig:asl}), \textit{J} \textit{Z} excluded because they involve a movement. To discriminate between dynamic and static gestures, I decided to prioritize the dynamic ones because the user has to perform an action to activate them. Instead, with the static gestures, the hand doesn't move, and the recognizer will always return a prediction. Also the numbers have been excluded.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{asl.png}
+    \caption{\glsdesc{ASL}~\parencite{img:asl}}\label{fig:asl}
+\end{figure}
+
 \subsubsection{MediaPipe data}
 
 \subsubsection{Deep neural network}
