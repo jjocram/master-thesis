@@ -1,4 +1,4 @@
-\documentclass[12pt, a4paper, twoside, openright, english]{book}
+\documentclass[12pt, a4paper, twoside, openright, english]{report}
 \usepackage[english]{babel}
 \usepackage{float}
 \usepackage[T1]{fontenc}
@@ -17,7 +17,7 @@
 \usepackage[binding=5mm]{layaureo}
 \usepackage{listings}
 \usepackage{microtype}
-\usepackage{mparhack,fixltx2e,relsize}
+\usepackage{mparhack,relsize}
 \usepackage{nameref}
 \usepackage[font=small]{quoting}
 \usepackage[english]{varioref}
@@ -34,10 +34,14 @@
 \usepackage[toc, acronym]{glossaries}
 \usepackage[backend=biber,style=numeric-comp,hyperref,backref,maxbibnames=9,maxcitenames=2]{biblatex}
 
+\usepackage{glossaries}
+\makenoidxglossaries
+\input{thesis/glossary}
+
 \input{thesis_config/config}
 
 \begin{document}
-\frontmatter
+
 \subfile{begin/title_page}
 \subfile{begin/dedication}
 \subfile{begin/abstract}
@@ -45,13 +49,14 @@
 \subfile{begin/table_of_contents}
 \cleardoublepage
 
-\mainmatter
 \subfile{chapters/introduction}
-\subfile{chapters/background}
-\subfile{chapters/technologies_and_tools}
-\subfile{chapters/system_design_and_implementation}
+\subfile{chapters/theory}
+\subfile{chapters/method}
+\subfile{chapters/results}
+\subfile{chapters/discussion}
+\subfile{chapters/conclusion}
 
-\backmatter
-\printglossaries
+\printnoidxglossaries
+
 \subfile{end/bibliography}
 \end{document}

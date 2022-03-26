@@ -1,17 +1,17 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
-\chapter{Technologies and tools}\label{cap:technologies-and-tools}
-
-\section{Tensorflow}
+\chapter{Methods in...}\label{cap:methods}
+\section{Technologies and tools}\label{sec:technologies_and_tolls}
+\subsection{Tensorflow}
 Tensorflow is an open-source Python library to build \acrshort{ML} models. Google started its development in 2015 and today is one of the most used Python libraries to perform \acrshort{ML} tasks. It offers a huge number of layers, activation functions, and tools to build simple and complex neural network architectures.
 
-\subsection{Tensorflow lite}
+\subsubsection{Tensorflow lite}
 Tensorflow lite is a component of Tensorflow that allows to convert a Tensorflow model into a compressed flat buffer and then deploy it into any device (e.g.\ mobile devices or embedded device). With the goal of deploying the hand gesture recognizer to a Nvidia Jetson, the use of this tool is natural.
 
-\subsection{Keras}
+\subsubsection{Keras}
 Keras takes advantages of Tensorflow to give to the user a powerful API to design and develop Deep Neural Networks. With a few lines of code is possible to implement complex neural networks that exploit the latest researches in the field of \gls{ML}.
 
-\section{MediaPipe}\label{sec:mediapipe}
+\subsection{MediaPipe}\label{sec:mediapipe}
 MediaPipe is an open-source, real-time, and on-device tool that can track multiple parts of the body. In particular, I am interested in hand tracking. MediaPipe suits very well for this purpose because it offers a pre-trained \acrshort{ML} model to recognize and track twenty-one landmarks on each hand (figure~\ref{fig:landmarksMediapipe}). In particular, it uses a pipeline composed of two \acrshort{ML} models:
 \begin{enumerate}
     \item A palm detector that works on a full image locates the palm and identifies the bounding box around it;
@@ -27,7 +27,7 @@ The precision of this tool is about $96\%$~\cite{paper:mediapipe} so, it is a go
 What MediaPipe returns is the list of coordinates relatives at the 2.5D position of hand's landmarks. These coordinates can be saved and used to train a deep neural network instead images, reducing the size of the dataset.\\
 It is interesting to point out that MediaPipe is capable to track, in real-time, different parts of a human body, for example, the face and the whole body.~\cite{site:mediapipe}
 
-\section{Robot Operating System}
+\subsection{Robot Operating System}
 \acrfull{ROS} is an open-source set of libraries and tools to develop robot applications. The latest \acrshort{LTS} release, and the one used for this project, is \textit{ROS Foxy Fitzroy}. The key points to understand when using \acrshort{ROS} are related to the ``ROS 2 Graph'', and they are:
 \begin{itemize}
     \item \textbf{Node}: it is a component of the system responsible for a task. It is an executable, in my case a Python executable but it could also be a C++ executable, and it can communicate with other nodes exchanging messages. A robotic system is composed of multiple nodes;
@@ -38,8 +38,8 @@ It is interesting to point out that MediaPipe is capable to track, in real-time,
             \item \textbf{Action}.
         \end{itemize}
 \end{itemize}
-\subsection{Exchange messages}
-\subsubsection{Topic}
+\subsubsection{Exchange messages}
+\paragraph{Topic}
 It is an implementation of the publisher/subscriber pattern. A node can publish messages with a topic, and every other node that is listening to that topic will read that message. This is an asynchronous way to exchange messages because the sender will not know if the message has been read for that this is the best way to broadcast a message without saturating the network.
 \begin{figure}[H]
     \centering
@@ -48,7 +48,7 @@ It is an implementation of the publisher/subscriber pattern. A node can publish 
     \label{fig:exampleTopicExchangeMessage}
 \end{figure}
 
-\subsubsection{Service}
+\paragraph{Service}
 It is based on a call-response model. In this case, a node requests some data to another node through a request message. The latter replies with a response message. This is a synchronous way to exchange messages. The node that needs the data waits for the response. There can be many nodes that use the same service to request some data from another node. This is a bit like what happens in a client-server architecture but it should not be used for long running process.
 \begin{figure}[H]
     \centering
@@ -57,7 +57,7 @@ It is based on a call-response model. In this case, a node requests some data to
     \label{fig:exampleServiceExchangeMessage}
 \end{figure}
 
-\subsubsection{Action}
+\paragraph{Action}
 It uses both topics and services. The functionality is similar to service with the addition of a constant stream of updates from the ``server'' through a topic at which the ``client'' subscribes. The sequence of actions is the following:
     \begin{enumerate}
         \item A node (i.e.\ the client) sends a message (the request for a goal) through a service to another node (i.e.\ the server). The latter replies with one message through the service. For example, it can reply with an acknowledgment or a message saying it starts working on a task;
@@ -71,7 +71,7 @@ It uses both topics and services. The functionality is similar to service with t
     \label{fig:exampleActionExchangeMessage}
 \end{figure}
 
-\subsection{Communication between nodes over the network}
+\subsubsection{Communication between nodes over the network}
 \gls{ROS} uses \glsfirst{DDS} as an end-to-end middleware to exchange messages:  This difference is one of the mains between \gls{ROS} version 1 and \gls{ROS} version 2. \gls{DDS} was chosen by \gls{ROS} maintainer for its reliability and flexibility in mission-critical systems, such as:
 \begin{itemize}
     \item battleships;
@@ -83,9 +83,97 @@ It uses both topics and services. The functionality is similar to service with t
 \end{itemize}
 The implementation of \gls{DDS} is hidden from the user, who uses the three methods described above with the \gls{ROS} API to exchange messages. More information can be found on the article written by \citeauthor{site:ros_dds}~\cite{site:ros_dds}.
 
-\subsection{Navigation}
+\subsubsection{Navigation}
 ``Nav 2'' is the navigation system provided by \gls{ROS}. A developer can chose to use their own navigation system but the one developed by~\citeauthor{paper:navigation2} is widely tested and supported~\cite{paper:navigation2}. 
 
-\section{Gazebo simulator}
+\subsection{Gazebo simulator}
 Gazebo is an open-source simulator that allows simulating environments where robots are involved. Gazebo offers the ability to accurately and efficiently simulate populations of robots in complex indoor and outdoor environments. Moreover, there is the possibility to use different robot models using \glsfirst{SDF} file and to import Collada file into the simulated world. Gazebo is also expandable with plugins. One of those allows using \acrshort{ROS} to communicate with the robots inside the simulation. I used the Gazebo simulator to perform some tests before deploying the software in a real environment. 
+
+\section{System design and implementation}\label{sec:system_design_and_implementation}
+The system is composed of two components: a node that deals with  hand gesture recognition and a node representing the robot to be controlled. The tasks that the robot must perform are:
+\begin{itemize}
+    \item Pick up a parcel;
+    \item Drop down a parcel;
+    \item Go to a predetermined position.
+\end{itemize}
+A letter identified positions and parcels. In this way, the \glsfirst{ASL} is exploitable in order to simulate the identification of positions and parcels.\\
+Starting from these assumptions a finite state automaton can be used to check the correctness of the input. Figure~\ref{fig:automata_for_commands} shows the transition diagram for a possible automaton with this purpose. The alphabet is $\Sigma = \{[A-Z], go\, to, pick\, up, drop\, down\}$ and the states are:
+\begin{itemize}
+    \item \textbf{$q_0$}: robot without parcel; 
+    \item \textbf{$q_1$}: robot waiting for parcel id; 
+    \item \textbf{$q_2$}: robot waiting for a ``direction'' without a parcel;
+    \item \textbf{$q_3$}: robot with a parcel;
+    \item \textbf{$q_4$}: robot waiting for a ``direction'' with a parcel.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \resizebox{0.8\textwidth}{!}{%
+    \begin{tikzpicture}[node distance = 4cm, on grid]
+        \node (q0) [state, initial, accepting] {$q_0$};
+        \node (q1) [state, above right = of q0] {$q_1$};
+        \node (q3) [state, right = of q1] {$q_3$};
+        \node (q4) [state, below right = of q3] {$q_4$};
+        \node (q2) [state, below right = of q0] {$q_2$};
+
+        \path [-stealth, thick]
+            (q0) edge node[below right] {pick up} (q1)
+            (q1) edge node[auto] {[A-Z]} (q3)
+            (q3) edge node[auto] {go to} (q4)
+            (q4) edge [bend left, auto] node {[A-Z]} (q3)
+            (q0) edge node[auto] {go to} (q2)
+            (q2) edge [bend left, auto] node {[A-Z]} (q0)
+            (q3) edge [in=90,out=120,above,distance=3cm, auto] node[above left] {drop down} (q0);
+    \end{tikzpicture}%
+}
+    \caption{Automata diagram for commands.}\label{fig:automata_for_commands}
+\end{figure}
+\gls{ROS} and its communication layer (i.e. exchange of messages) have to be used for the node implementation in order to comply with the requirement of interoperability between robots. For this reason, the hand gesture recognizer must be encapsulated inside a \gls{ROS} node.
+
+\subsection{Hand gesture recognizer}
+Two types of hand gestures have been considered:
+\begin{itemize}
+    \item \textbf{Static hand gestures}: in which the hand doesn't move and only a snapshot of the position of the fingers is sufficient to recognize the gesture;
+    \item \textbf{Dynamic hand gesture}: in which the hand performs a movement. In this case, a sequence of data is necessary to recognize the gesture. 
+\end{itemize}
+This diversity leads to two different neural networks to classify the hand gesture the user is doing.\\
+The hand gesture recognizer has been developed starting from the project of~\citeauthor{site:hand_gesture_base_repo}~\cite{site:hand_gesture_base_repo} to which several improvements have been made. Figure~\ref{fig:interface} shows the user interface of the hand gesture recognizer. In which, the following components are recognizable:
+\begin{itemize}
+    \item the hand tracker's landmarks: the black dots inside the green rectangle;
+    \item the history of landmarks to recognize dynamic gestures: the green dots inside the green rectangle;
+    \item the recognized static hand gesture: the letter inside the orange rectangle;
+    \item the recognized dynamic hand gesture: the word inside the pink rectangle;
+    \item the number of frame per seconds: the number inside the red rectangle.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{example_interface.png}
+    \caption{User interface of the hand gesture recognizer.}\label{fig:interface}
+\end{figure}
+
+\subsubsection{Static hand gestures}
+The set of static hand gestures chosen is the \gls{ASL} (in figure~\ref{fig:asl}), \textit{J} \textit{Z} excluded because they involve a movement. To discriminate between dynamic and static gestures, I decided to prioritize the dynamic ones because the user has to perform an action to activate them. Instead, with the static gestures, the hand doesn't move, and the recognizer will always return a prediction. Also the numbers have been excluded.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{asl.png}
+    \caption{\glsdesc{ASL}~\parencite{img:asl}}\label{fig:asl}
+\end{figure}
+
+\paragraph{MediaPipe data}
+
+\paragraph{Deep neural network}
+
+\paragraph{Training}
+
+\subsubsection{Dynamic hand gestures}
+
+\paragraph{MediaPipe data}
+
+\paragraph{Deep neural network}
+
+\paragraph{Training}
+
+\subsection{Integration with ROS}
 \end{document}
