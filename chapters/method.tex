@@ -1,8 +1,11 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
-\chapter{Methodology}\label{cap:methods}
-To fulfill the requirements of the project I adopted an experimental approach. First and foremost, I was able to determine which tools would have been the most appropriate for doing the computer vision and machine learning tasks. Then, to experiment the solution proposed I designed and developed a system capable of recognize and learn user's hand gestures, and communicate to a robot which action to perform based on the gesture.
+\chapter{Method}\label{cap:methods}
+To fulfill the requirements of the project I adopted an experimental approach. First and foremost, I was able to determine which tools would have been the most appropriate for doing the computer vision and machine learning tasks. Then, to experiment the solution proposed I designed and developed a proof of concept capable of recognize and learn user's hand gestures, and communicate to a robot which action to perform based on the gesture recognized.
 \section{Choice of technologies and tools}\label{sec:technologies_and_tolls}
+\subsection{Python}
+Python is a programming language...
+
 \subsection{Tensorflow}
 Tensorflow is an open-source Python library to build \acrshort{ML} models. Google started its development in 2015 and today is one of the most used Python libraries to perform \acrshort{ML} tasks. It offers a huge number of layers, activation functions, and tools to build simple and complex neural network architectures. the best known counterpart is PyTorch. During my studies, I have had occasion to use both and I think Tensorflow is more suitable to develop neural networks oriented towards an application. Instead, PyTorch is more appropriate in the development of new and complex neural networks. Moreover, Tensorflow is better integrated with data collections tools like Tensorboard.
 
@@ -92,6 +95,9 @@ The implementation of \gls{DDS} is hidden from the user, who uses the three meth
 
 \subsection{Gazebo simulator}
 Gazebo is an open-source simulator that allows simulating environments where robots are involved. Gazebo offers the ability to accurately and efficiently simulate populations of robots in complex indoor and outdoor environments. Moreover, there is the possibility to use different robot models using \glsfirst{SDF} file and to import Collada file into the simulated world. Gazebo is also expandable with plugins. One of those allows using \acrshort{ROS} to communicate with the robots inside the simulation. I used the Gazebo simulator to perform some tests before deploying the software in a real environment. 
+
+\subsection{Git}
+Git is a version control system...
 
 \section{System design and implementation}\label{sec:system_design_and_implementation}
 The system is composed of two components: a node that deals with  hand gesture recognition and a node representing the robot to be controlled. The tasks that the robot must perform are:

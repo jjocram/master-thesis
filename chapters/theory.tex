@@ -27,6 +27,25 @@ The hand gesture recognition task is a well-studied task. In the literature is p
 \subsection{Machine learning}
 Recognizing a hand gesture given an image or a frame of a video is not something easily algorithmizable. For this, the idea of using a neural network to fulfill the task is a good one.
 
+\subsubsection{Neural network}
+A neural network is a collection of neurons connected together. For the biology a neuron is an entity that takes several inputs, sums them together and, if a threshold is surpassed emits an output. An artificial neuron is similar. Figure~\ref{fig:neuron} represents one of them. It takes $N$ inputs, sums them together with a bias and passes the result to an activation function. If the result is higher than a threshold then the neuron returns an output.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics{thesis/images/neuron.png}
+    \caption{Representation of a neuron in a neural network.}
+    \label{fig:neuron}
+\end{figure}
+
+An artificial neural network is a set of neurons organized in layers. Figure~\ref{fig:neural_network_example} represents a deep neural network, deep because there is one or more hidden layer. Different kind of layers exists, the one showed in figure~\ref{fig:neural_network_example}, other than input and output, is a dense layer. In this kind of layer every output of the previous layer is received in input by each neuron of the layer considerate for the reasoning. Each neurons of the output layer return a probability that the input belongs to class. When there is only one output neuron the probability is $x\%$ to belong to the class an $100-x\%$ to not belong to the class. When there are more than one neurons, each of them return the probability to belong to a class and the highest is taken as the prediction. A prediction, to be considerated correct, must overcome a threshold value.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics{thesis/images/neuralNetworkExample.png}
+    \caption{An example of a deep neural network}
+    \label{fig:neural_network_example}
+\end{figure}
+
 \subsubsection{Dataset}
 When \acrshort{ML} is involved, the challenge is the need for big datasets on which the network can train. When image recognition is the task to fulfill, the datasets are composed of a lot of images and each one must be labeled to know what it is representing and where, inside the image, the position of the object to detect is. This kind of training is known as supervised learning which is different from the unsupervised in which the dataset has no labels and usually the task is to categorize the elements into macro-categories. Regarding the dataset dimension, I stress that, bigger is the dataset, slower is the training task. It is important find the right dimension that allows to have an acceptable accuracy level.
 
