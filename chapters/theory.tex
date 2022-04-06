@@ -37,7 +37,7 @@ A neural network is a collection of neurons connected together. For the biology 
     \label{fig:neuron}
 \end{figure}
 
-An artificial neural network is a set of neurons organized in layers. Figure~\ref{fig:neural_network_example} represents a deep neural network, deep because there is one or more hidden layer. Different kind of layers exists, the one showed in figure~\ref{fig:neural_network_example}, other than input and output, is a dense layer. In this kind of layer every output of the previous layer is received in input by each neuron of the layer considerate for the reasoning. Each neurons of the output layer return a probability that the input belongs to class. When there is only one output neuron the probability is $x\%$ to belong to the class an $100-x\%$ to not belong to the class. When there are more than one neurons, each of them return the probability to belong to a class and the highest is taken as the prediction. A prediction, to be considerated correct, must overcome a threshold value.
+An artificial neural network is a set of neurons organized in layers. Figure~\ref{fig:neural_network_example} represents a deep neural network, deep because there is one or more hidden layer. Different kind of layers exists, the one showed in figure~\ref{fig:neural_network_example}, other than input and output, is a dense layer. In this kind of layer every output of the previous layer is received in input by each neuron of the layer considerate for the reasoning. Regarding the output layer, each neurons return a probability that the input belongs to a class. When there is only one output neuron the probability is $p$ to belong to the class an $1-p$ to not belong to the class. When there are more than one neurons, each of them return the probability to belong to a class and the highest is taken as the prediction. A prediction, to be considerated correct, must overcome a threshold value. More are the hidden layer, more the network will be accurate but, more time will take to learn.
 
 \begin{figure}[H]
     \centering
@@ -48,6 +48,9 @@ An artificial neural network is a set of neurons organized in layers. Figure~\re
 
 \subsubsection{Dataset}
 When \acrshort{ML} is involved, the challenge is the need for big datasets on which the network can train. When image recognition is the task to fulfill, the datasets are composed of a lot of images and each one must be labeled to know what it is representing and where, inside the image, the position of the object to detect is. This kind of training is known as supervised learning which is different from the unsupervised in which the dataset has no labels and usually the task is to categorize the elements into macro-categories. Regarding the dataset dimension, I stress that, bigger is the dataset, slower is the training task. It is important find the right dimension that allows to have an acceptable accuracy level.
+
+\subsubsection{Training}
+The goal of training a neural networks is to find the best weights for each neuron's inputs. The gradient descent technique is used to achieve this goal. Data is essential to train a neural network. To correctly train and evaluate a neural network, three datasets are requested. Usually, one dataset is divided in three non-overlapping partitions in a random way. The first and the biggest part of the dataset is used to train the network. In detail, it is used for adjust the weights of inputs. Then, another part of the dataset is picked as validation during the training process and the last part is taken to evaluate the trained model at the end.
 
 \subsubsection{Evaluation}
 To evaluate an \acrshort{ML} model is necessary to collect some data during the training process. The metrics to keep track of are:

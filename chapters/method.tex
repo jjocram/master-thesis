@@ -4,7 +4,7 @@
 To fulfill the requirements of the project I adopted an experimental approach. First and foremost, I was able to determine which tools would have been the most appropriate for doing the computer vision and machine learning tasks. Then, to experiment the solution proposed I designed and developed a proof of concept capable of recognize and learn user's hand gestures, and communicate to a robot which action to perform based on the gesture recognized.
 \section{Choice of technologies and tools}\label{sec:technologies_and_tolls}
 \subsection{Python}
-Python is a programming language...
+Python is a high level programming language. It is a well known and highly supported programming language for machine learning tasks. Moreover, it is also supported by \acrshort{ROS} whose documentation has sections written for it. The version used for this project is 3.10 because the pattern matching offered through the \texttt{match ... case} statement is exploited.
 
 \subsection{Tensorflow}
 Tensorflow is an open-source Python library to build \acrshort{ML} models. Google started its development in 2015 and today is one of the most used Python libraries to perform \acrshort{ML} tasks. It offers a huge number of layers, activation functions, and tools to build simple and complex neural network architectures. the best known counterpart is PyTorch. During my studies, I have had occasion to use both and I think Tensorflow is more suitable to develop neural networks oriented towards an application. Instead, PyTorch is more appropriate in the development of new and complex neural networks. Moreover, Tensorflow is better integrated with data collections tools like Tensorboard.
@@ -23,7 +23,7 @@ MediaPipe is an open-source, real-time, and on-device tool that can track multip
 \end{enumerate}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\columnwidth]{mediapipeHandLandmarks.png}
+    \includegraphics[width=\columnwidth]{thesis/images/mediapipeHandLandmarks.png}
     \caption{Landmarks on a hand recognized by MediaPipe~\cite{site:mediapipe}}
     \label{fig:landmarksMediapipe}
 \end{figure}
@@ -50,7 +50,7 @@ OpenCV is an open-source library that fully meets the necessary requirements reg
 It is an implementation of the publisher/subscriber pattern. A node can publish messages with a topic, and every other node that is listening to that topic will read that message. This is an asynchronous way to exchange messages because the sender will not know if the message has been read for that this is the best way to broadcast a message without saturating the network.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\columnwidth]{topicExample.png}
+    \includegraphics[width=0.7\columnwidth]{thesis/images/topicExample.png}
     \caption{Example of message exchange between three nodes using a topic.}
     \label{fig:exampleTopicExchangeMessage}
 \end{figure}
@@ -59,7 +59,7 @@ It is an implementation of the publisher/subscriber pattern. A node can publish 
 It is based on a call-response model. In this case, a node requests some data to another node through a request message. The latter replies with a response message. This is a synchronous way to exchange messages. The node that needs the data waits for the response. There can be many nodes that use the same service to request some data from another node. This is a bit like what happens in a client-server architecture but it should not be used for long running process.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\columnwidth]{serviceExample.png}
+    \includegraphics[width=0.8\columnwidth]{thesis/images/serviceExample.png}
     \caption{Example of messages exchange between three nodes using a service.}
     \label{fig:exampleServiceExchangeMessage}
 \end{figure}
@@ -73,7 +73,7 @@ It uses both topics and services. The functionality is similar to service with t
     \end{enumerate}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\columnwidth]{actionExample.png}
+    \includegraphics[width=1\columnwidth]{thesis/images/actionExample.png}
     \caption{Example of messages exchange between two nodes using an action.}
     \label{fig:exampleActionExchangeMessage}
 \end{figure}
@@ -97,69 +97,61 @@ The implementation of \gls{DDS} is hidden from the user, who uses the three meth
 Gazebo is an open-source simulator that allows simulating environments where robots are involved. Gazebo offers the ability to accurately and efficiently simulate populations of robots in complex indoor and outdoor environments. Moreover, there is the possibility to use different robot models using \glsfirst{SDF} file and to import Collada file into the simulated world. Gazebo is also expandable with plugins. One of those allows using \acrshort{ROS} to communicate with the robots inside the simulation. I used the Gazebo simulator to perform some tests before deploying the software in a real environment. 
 
 \subsection{Git}
-Git is a version control system...
+Git is a distributed version control system. It has been extensively used to store and share the source code and documentation of this project. In particular GitHub has been used, creating several repositories.
 
 \section{System design and implementation}\label{sec:system_design_and_implementation}
-The system is composed of two components: a node that deals with  hand gesture recognition and a node representing the robot to be controlled. The tasks that the robot must perform are:
-\begin{itemize}
-    \item Pick up a parcel;
-    \item Drop down a parcel;
-    \item Go to a predetermined position.
-\end{itemize}
-A letter identified positions and parcels. In this way, the \glsfirst{ASL} is exploitable in order to simulate the identification of positions and parcels.\\
-Starting from these assumptions a finite state automaton can be used to check the correctness of the input. Figure~\ref{fig:automata_for_commands} shows the transition diagram for a possible automaton with this purpose. The alphabet is $\Sigma = \{[A-Z], go\, to, pick\, up, drop\, down\}$ and the states are:
-\begin{itemize}
-    \item \textbf{$q_0$}: robot without parcel; 
-    \item \textbf{$q_1$}: robot waiting for parcel id; 
-    \item \textbf{$q_2$}: robot waiting for a ``direction'' without a parcel;
-    \item \textbf{$q_3$}: robot with a parcel;
-    \item \textbf{$q_4$}: robot waiting for a ``direction'' with a parcel.
-\end{itemize}
-
-\begin{figure}[H]
-    \centering
-    \resizebox{0.8\textwidth}{!}{%
-    \begin{tikzpicture}[node distance = 4cm, on grid]
-        \node (q0) [state, initial, accepting] {$q_0$};
-        \node (q1) [state, above right = of q0] {$q_1$};
-        \node (q3) [state, right = of q1] {$q_3$};
-        \node (q4) [state, below right = of q3] {$q_4$};
-        \node (q2) [state, below right = of q0] {$q_2$};
-
-        \path [-stealth, thick]
-            (q0) edge node[below right] {pick up} (q1)
-            (q1) edge node[auto] {[A-Z]} (q3)
-            (q3) edge node[auto] {go to} (q4)
-            (q4) edge [bend left, auto] node {[A-Z]} (q3)
-            (q0) edge node[auto] {go to} (q2)
-            (q2) edge [bend left, auto] node {[A-Z]} (q0)
-            (q3) edge [in=90,out=120,above,distance=3cm, auto] node[above left] {drop down} (q0);
-    \end{tikzpicture}%
-}
-    \caption{Automata diagram for commands.}\label{fig:automata_for_commands}
-\end{figure}
-\gls{ROS} and its communication layer (i.e. exchange of messages) have to be used for the node implementation in order to comply with the requirement of interoperability between robots. For this reason, the hand gesture recognizer must be encapsulated inside a \gls{ROS} node.
 
 \subsection{Hand gesture recognizer}
-Two types of hand gestures have been considered:
+The first challenge to to solve was the design and the implementation of the hand gesture recognizer. In particular, two types of hand gestures was considered:
 \begin{itemize}
     \item \textbf{Static hand gestures}: in which the hand doesn't move and only a snapshot of the position of the fingers is sufficient to recognize the gesture;
     \item \textbf{Dynamic hand gesture}: in which the hand performs a movement. In this case, a sequence of data is necessary to recognize the gesture. 
 \end{itemize}
 This diversity leads to two different neural networks to classify the hand gesture the user is doing.\\
-The hand gesture recognizer has been developed starting from the project of~\citeauthor{site:hand_gesture_base_repo}~\cite{site:hand_gesture_base_repo} to which several improvements have been made. Figure~\ref{fig:interface} shows the user interface of the hand gesture recognizer. In which, the following components are recognizable:
+The hand gesture recognizer was developed starting from the project of~\citeauthor{site:hand_gesture_base_repo}~\cite{site:hand_gesture_base_repo} to which several improvements were made. Before running the hand gesture detector, the user can choose in which mode running the program:
 \begin{itemize}
-    \item the hand tracker's landmarks: the black dots inside the green rectangle;
-    \item the history of landmarks to recognize dynamic gestures: the green dots inside the green rectangle;
-    \item the recognized static hand gesture: the letter inside the orange rectangle;
-    \item the recognized dynamic hand gesture: the word inside the pink rectangle;
-    \item the number of frame per seconds: the number inside the red rectangle.
+    \item \textbf{operational};
+    \item \textbf{learning};
+    \item \textbf{macro}.
 \end{itemize}
 
+\subsubsection{Operational mode}
+Within this mode the operator can do a sequence of hand gesture that will be translated in commands for the robot and will be sent to it through \acrshort{ROS}' communication system
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{example_interface.png}
-    \caption{User interface of the hand gesture recognizer.}\label{fig:interface}
+    \includegraphics[width=\textwidth]{thesis/images/systemArchitectureOperational.png}
+    \caption{Data flow in operational mode.}
+    \label{fig:system_architecture_operational}
+\end{figure}
+
+\subsubsection{Learning mode}
+In this mode the user can choose to add a new gesture or enhance one already existing adding more data to the dataset. In both cases, a command line interface is used to interact with the user
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{thesis/images/systemArchitectureTraining.png}
+    \caption{Data flow in learning mode.}
+    \label{fig:system_architecture_learning}
+\end{figure}
+
+\subsubsection{Macro mode}
+ This mode is similar the the operational but, instead of sending the command in real time to a robot, the user can choose if save a sequence of them in a text file or ``execute'' a previously saved macro's file sending its content to a robot.
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{\textwidth}
+        \includegraphics[width=\textwidth]{thesis/images/SystemArchitectureSaveMacro.png}
+        \caption{Data flow when creating a new macro.}
+        \label{fig:system_architecture_save_macro}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{\textwidth}
+        \includegraphics[width=\textwidth]{thesis/images/SystemArchitectureMacroRunner.png}
+        \caption{Data flow when running a macro.}
+        \label{fig:system_architecture_run_macro}
+    \end{subfigure}
+    
+    \caption{Data flows in macro mode.}
+    \label{fig:data_flows}
 \end{figure}
 
 \subsubsection{Static hand gestures}
@@ -167,7 +159,7 @@ The set of static hand gestures chosen is the \gls{ASL} (in figure~\ref{fig:asl}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{asl.png}
+    \includegraphics[width=\textwidth]{thesis/images/asl.png}
     \caption{\glsdesc{ASL}~\parencite{img:asl}}\label{fig:asl}
 \end{figure}
 
