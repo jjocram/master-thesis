@@ -3,11 +3,11 @@
 \chapter{Introduction}\label{cap:introduction}
 
 \section{Background and motivation}
-Improving the way an operator can interact with a robot is a hard challenge in the field of \acrfull{HRI}. Nowadays, robots are everywhere, and the control of their movements and actions is usually done through a joystick or a dashboard in case of very complicated tasks.\\
+Improving the way an operator can interact with a robot is a hard challenge in the field of \acrfull{HRI}. Nowadays, robots are everywhere, and the control of their movements and actions is usually done through a joystick or a dashboard in the case of very complicated tasks.\\
 The idea of using the operator's body to interact with a robot is not a new one, but it brings several challenges when trying to implement it. A possible solution would be to use computer vision and machine learning techniques. In recent years, the computational power of processors and the ability to deploy \acrfull{ML} models on cheaper and smaller devices have paved the way to interact with computers and robots in a way previously unfeasible.
 
 \section{Problem statement}
-The main idea of the project is to improve the interaction between human and robots through computer vision and \acrshort{ML} to detect a set of hand gestures in real time and convey to a robot the action to take in response to the gesture. In this way, the operator can use the expressive power of his/her hands and their immediacy to communicate with the robot. Furthermore, by implementing this concept as an interface using the \acrfull{ROS} framework, we will no longer have to worry about which robot we want to manage in the future; all that is required is that it receives specified messages in order to function. An example of the idea we want to implement is the one in~\ref{fig:systemArchitecture}.
+The main idea of the project is to improve the interaction between humans and robots through computer vision and \acrshort{ML} to detect a set of hand gestures in real time and convey to a robot the action to take in response to the gesture. In this way, the operator can use the expressive power of his/her hands and their immediacy to communicate with the robot. Furthermore, by implementing this concept as an interface using the \acrfull{ROS} framework, we will no longer have to worry about which robot we want to manage in the future; all that is required is that it receives specified messages in order to function. An example of the idea we want to implement is the one in~\ref{fig:systemArchitecture}.
 
 \begin{figure}[H]
   \centering
@@ -16,14 +16,14 @@ The main idea of the project is to improve the interaction between human and rob
   \label{fig:systemArchitecture}
 \end{figure}
 
-A warehouse environment has been chosen to test the system because since 2011 Amazon started using robots inside its warehouses, and nowadays, the number of warehouses that use robots to carry products is fastly growing~\cite{paper:bogue2016}. Anyway, a modular system would allow to easily change the actions performed by the robot in response to a gesture or change the gestures the system can recognize.\\
-The system designed should be able to:
+The technology was chosen to be tested in a warehouse scenario because, since 2011, Amazon has been deploying robots within its warehouses, and the number of warehouses using robots to move goods is rapidly increasing~\cite{paper:bogue2016}. In any case, a modular system would make it simple to adjust the robot's activities in response to a gesture or the motions the system recognizes.\\
+The system should:
 \begin{itemize}
-    \item recognize a set of hand gesture;
-    \item communicate with a robot through the \acrshort{ROS} framework;
-    \item learn new gestures from the user;
-    \item record some \glsfirstplural{macro}, save and execute them;
-    \item allow the user to change its behaviour in response to a gesture.
+    \item be able to recognize a set of hand gestures;
+    \item use the \acrshort{ROS} framework to communicate with a robot;
+    \item pick up on new gestures from the user;
+    \item create some \glsfirstplural{macro}, save them, and run them;
+    \item enables the user to alter the robot's behavior in response to a gesture.
 \end{itemize}
 To complete all of these tasks, I combed the literature for information on the state of the art of the \acrshort{HRI}, its evaluation methods, and the best way to perform a hand gesture recognition task.
 

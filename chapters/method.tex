@@ -1,19 +1,19 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
 \chapter{Method}\label{cap:methods}
-To fulfill the requirements of the project I adopted an experimental approach. First and foremost, I was able to determine which tools would have been the most appropriate for doing the computer vision and machine learning tasks. Then, to experiment the solution proposed I designed and developed a proof of concept capable of recognize and learn user's hand gestures, and communicate to a robot which action to perform based on the gesture recognized.
+To fulfill the requirements of the project, I adopted an experimental approach. First and foremost, I was able to determine which tools would have been the most appropriate for doing the computer vision and machine learning tasks. Then, to experiment with the solution proposed, I designed and developed a proof of concept capable of recognizing and learning a user’s hand gestures and communicating to a robot which action to perform based on the gesture recognized. 
 \section{Choice of technologies and tools}\label{sec:technologies_and_tolls}
 \subsection{Python}
-Python is a high level programming language. It is a well known and highly supported programming language for machine learning tasks. Moreover, it is also supported by \acrshort{ROS} whose documentation has sections written for it. The version used for this project is 3.10 because the pattern matching offered through the \texttt{match ... case} statement is exploited.
+Python is a high-level programming language. It is a well-known and highly supported programming language for machine learning tasks. Moreover, it is also supported by \acrshort{ROS} whose documentation has sections written for it. The version used for this project is 3.10 because the pattern matching offered through the \texttt{match ... case} statement is exploited.
 
 \subsection{Tensorflow}
-Tensorflow is an open-source Python library to build \acrshort{ML} models. Google started its development in 2015 and today is one of the most used Python libraries to perform \acrshort{ML} tasks. It offers a huge number of layers, activation functions, and tools to build simple and complex neural network architectures. the best known counterpart is PyTorch. During my studies, I have had occasion to use both and I think Tensorflow is more suitable to develop neural networks oriented towards an application. Instead, PyTorch is more appropriate in the development of new and complex neural networks. Moreover, Tensorflow is better integrated with data collections tools like Tensorboard.
+Tensorflow is an open-source Python library to build \acrshort{ML} models. Google began developing it in 2015, and it is now one of the most widely-used Python libraries for performing \acrshort{ML} tasks. It offers a huge number of layers, activation functions, and tools to build simple and complex neural network architectures. The best-known counterpart is PyTorch. During my studies, I have had to use both, and I think Tensorflow is more suitable to develop neural networks oriented toward an application. Instead, PyTorch is more appropriate for the development of new and complex neural networks. Moreover, Tensorflow is better integrated with data collection tools like Tensorboard. 
 
 \subsubsection{Tensorflow lite}
-Tensorflow lite is a component of Tensorflow that allows to convert a Tensorflow model into a compressed flat buffer and then deploy it into any device (e.g.\ mobile devices or embedded device). With the goal of deploying the hand gesture recognizer to a Nvidia Jetson, the use of this tool is natural.
+Tensorflow Lite is a component of Tensorflow that allows you to convert a Tensorflow model into a compressed flat buffer and then deploy it onto any device (e.g. mobile devices or embedded devices). To deploy the hand gesture recognizer to the Nvidia Jetson, the use of this tool is natural.
 
 \subsubsection{Keras}
-Keras takes advantages of Tensorflow to give to the user a powerful API to design and develop Deep Neural Networks. With a few lines of code is possible to implement complex neural networks that exploit the latest researches in the field of \gls{ML}.
+Keras takes advantage of Tensorflow to give the user a powerful API to design and develop Deep Neural Networks. With a few lines of code, it is possible to implement complex neural networks that exploit the latest research in the field of  \gls{ML}.
 
 \subsection{MediaPipe}\label{sec:mediapipe}
 MediaPipe is an open-source, real-time, and on-device tool that can track multiple parts of the body. In particular, I am interested in hand tracking. MediaPipe suits very well for this purpose because it offers a pre-trained \acrshort{ML} model to recognize and track twenty-one landmarks on each hand (figure~\ref{fig:landmarksMediapipe}). In particular, it uses a pipeline composed of two \acrshort{ML} models:
@@ -27,18 +27,23 @@ MediaPipe is an open-source, real-time, and on-device tool that can track multip
     \caption{Landmarks on a hand recognized by MediaPipe~\cite{site:mediapipe}}
     \label{fig:landmarksMediapipe}
 \end{figure}
-The precision of this tool is about $96\%$~\cite{paper:mediapipe} so, it is a good starting point for the hand gesture recognition task. It is possible to get the position of the landmarks and give them in input at a Deep Neural Network trained on the gestures of our interest.\\
-What MediaPipe returns is the list of coordinates relatives at the 2.5D position of hand's landmarks. These coordinates can be saved and used to train a deep neural network instead images, reducing the size of the dataset.\\
-It is interesting to point out that MediaPipe is capable to track, in real-time, different parts of a human body, for example, the face and the whole body.~\cite{site:mediapipe}
+The precision of this tool is about $96\%$~\cite{paper:mediapipe}, so it is a good starting point for the hand gesture recognition task. It is possible to get the position of the landmarks and give them input through a Deep Neural Network trained on the gestures of our interest. \\
+The list of coordinates relatives at the 2.5D position of the hand's landmarks is returned by MediaPipe.These coordinates can be saved and used to train a deep neural network instead of images. This is interesting because: 
+\begin{itemize}
+    \item reduce the size of the dataset;
+    \item eliminate environmental factors such as background, lighting, and skin color;
+\end{itemize}
+
+It is interesting to point out that MediaPipe is capable of tracking, in real-time, different parts of the human body, for example, the face and the whole body~\cite{site:mediapipe}.
 
 \subsection{OpenCV}
-OpenCV is an open-source library that fully meets the necessary requirements regarding computer vision and works well with MediaPipe. It is also distributed as a Python package to integrate in in users' applications.
+OpenCV is an open-source library that fully meets the requirements regarding computer vision and works well with MediaPipe. It is also distributed as a Python package to integrate into users' applications. 
 
 \subsection{Robot Operating System}
 \acrfull{ROS} is an open-source set of libraries and tools to develop robot applications. The latest release, and the one used for this project, is \textit{ROS Galactic Geochelone}. The key points to understand when using \acrshort{ROS} are related to the ``ROS 2 Graph'', and they are:
 \begin{itemize}
-    \item \textbf{Node}: it is a component of the system responsible for a task. It is an executable, in my case a Python executable but it could also be a C++ executable, and it can communicate with other nodes exchanging messages. A robotic system is composed of multiple nodes;
-    \item \textbf{Message}: what nodes use to exchange data. Each message has its own ``type'', and this brings advantages in building an interchangeable system because it is possible to change the components of the system with others that can understand the same messages. Messages, in this case, can be seen as the interfaces for programming languages. There are three ways for nodes to exchange messages:
+    \item \textbf{Node}: a system component in charge of a specific task. It is an executable, in my case, a Python executable, but it could also be a C++ executable, and it can communicate with other nodes, exchanging messages. A robotic system is composed of multiple nodes; 
+    \item \textbf{Message}: the method by which nodes exchange data. Each message has its own ``type'', and this brings advantages in building an interchangeable system because it is possible to change the components of the system with others that can understand the same messages. Messages, in this case, can be seen as interfaces for programming languages. There are three ways for nodes to exchange messages: 
         \begin{itemize}
             \item \textbf{Topic};
             \item \textbf{Service};
@@ -47,7 +52,7 @@ OpenCV is an open-source library that fully meets the necessary requirements reg
 \end{itemize}
 \subsubsection{Exchange messages}
 \paragraph{Topic}
-It is an implementation of the publisher/subscriber pattern. A node can publish messages with a topic, and every other node that is listening to that topic will read that message. This is an asynchronous way to exchange messages because the sender will not know if the message has been read for that this is the best way to broadcast a message without saturating the network.
+It is an implementation of the publisher/subscriber pattern. A node can publish messages with a topic, and every other node that is listening to that topic will read that message. This is an asynchronous way of exchanging messages because the sender will not know if the message has been read. For example, this is the best way to broadcast a message without saturating the network. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\columnwidth]{thesis/images/topicExample.png}
@@ -56,7 +61,7 @@ It is an implementation of the publisher/subscriber pattern. A node can publish 
 \end{figure}
 
 \paragraph{Service}
-It is based on a call-response model. In this case, a node requests some data to another node through a request message. The latter replies with a response message. This is a synchronous way to exchange messages. The node that needs the data waits for the response. There can be many nodes that use the same service to request some data from another node. This is a bit like what happens in a client-server architecture but it should not be used for long running process.
+It is based on a call-response model. In this case, a node requests some data from another node through a request message. The latter replies with a response message. This is a synchronous way of exchanging messages. The node that needs the data waits for the response. There can be many nodes that use the same service to request some data from another node. This is a bit like what happens in a client-server architecture, but it should not be used for long-running processes. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\columnwidth]{thesis/images/serviceExample.png}
@@ -65,11 +70,11 @@ It is based on a call-response model. In this case, a node requests some data to
 \end{figure}
 
 \paragraph{Action}
-It uses both topics and services. The functionality is similar to service with the addition of a constant stream of updates from the ``server'' through a topic at which the ``client'' subscribes. The sequence of actions is the following:
+It uses both topics and services. The functionality is similar to service with the addition of a constant stream of updates from the ``server'' through a topic to which the ``client'' subscribes. The sequence of actions is the following: 
     \begin{enumerate}
-        \item A node (i.e.\ the client) sends a message (the request for a goal) through a service to another node (i.e.\ the server). The latter replies with one message through the service. For example, it can reply with an acknowledgment or a message saying it starts working on a task;
-        \item The server keeps the client updated with the progress of the task through a topic;
-        \item The client sends a request through another service to the server. When the task finishes, the server will reply to the client.
+        \item A node (i.e.\ the client) sends a message (the request for a goal) through a service to another node  (i.e.\ the server). The latter replies with one message through the service. For example, it can reply with an acknowledgment or a message saying it has started working on a task; 
+        \item The server keeps the client updated with the progress of the task through a topic; 
+        \item The client sends a request through another service to the server. When the task is finished, the server will reply to the client. 
     \end{enumerate}
 \begin{figure}[H]
     \centering
@@ -79,44 +84,38 @@ It uses both topics and services. The functionality is similar to service with t
 \end{figure}
 
 \subsubsection{Communication between nodes over the network}
-\gls{ROS} uses \glsfirst{DDS} as an end-to-end middleware to exchange messages:  This difference is one of the mains between \gls{ROS} version 1 and \gls{ROS} version 2. \gls{DDS} was chosen by \gls{ROS} maintainer for its reliability and flexibility in mission-critical systems, such as:
+\gls{ROS} uses \glsfirst{DDS} as an end-to-end middleware to exchange messages:  This difference is one of the main differences between \gls{ROS} version 1 and \gls{ROS} version 2. The \gls{DDS} was chosen by the \gls{ROS} maintainer for its reliability and flexibility in mission-critical systems, such as:
 \begin{itemize}
     \item battleships;
-    \item large utility installations;
-    \item financial systems;
-    \item space systems;
-    \item flight systems;
+    \item extensive utility installations;
+    \item monetary systems;
+    \item spacecraft;
+    \item flight control systems;
     \item train switchboard systems.
 \end{itemize}
 The implementation of \gls{DDS} is hidden from the user, who uses the three methods described above with the \gls{ROS} API to exchange messages. More information can be found on the article written by \citeauthor{site:ros_dds}~\cite{site:ros_dds}.
 
 \subsubsection{Navigation}
-``Nav 2'' is the navigation system provided by \gls{ROS}. A developer can chose to use their own navigation system but the one developed by~\citeauthor{paper:navigation2} is widely tested and supported~\cite{paper:navigation2}. 
+``Nav 2'' is the navigation system provided by \gls{ROS}. A developer can choose to use their navigation system, but the one developed by ~\citeauthor{paper:navigation2} is widely tested and supported~\cite{paper:navigation2}. 
 
 \subsection{Gazebo simulator}
-Gazebo is an open-source simulator that allows simulating environments where robots are involved. Gazebo offers the ability to accurately and efficiently simulate populations of robots in complex indoor and outdoor environments. Moreover, there is the possibility to use different robot models using \glsfirst{SDF} file and to import Collada file into the simulated world. Gazebo is also expandable with plugins. One of those allows using \acrshort{ROS} to communicate with the robots inside the simulation. I used the Gazebo simulator to perform some tests before deploying the software in a real environment. 
+Gazebo is an open-source simulator for simulating environments involving robots. Gazebo offers the ability to accurately and efficiently simulate populations of robots in complex indoor and outdoor environments. Moreover, there is the possibility to use different robot models using \glsfirst{SDF}  files and import Collada files into the simulated world. Gazebo is also expandable with plugins. One of those lets you use \acrshort{ROS} to communicate with the robots inside the simulation. I used the Gazebo simulator to perform some tests before deploying the software in a real environment.  
 
 \subsection{Git}
-Git is a distributed version control system. It has been extensively used to store and share the source code and documentation of this project. In particular GitHub has been used, creating several repositories.
+Git is a distributed version control system. It has been extensively used to store and share the source code and documentation for this project. In particular, GitHub has been used, creating several repositories.
 
 \section{System design and implementation}\label{sec:system_design_and_implementation}
-
-\subsection{Hand gesture recognizer}
-The first challenge to to solve was the design and the implementation of the hand gesture recognizer. In particular, two types of hand gestures was considered:
-\begin{itemize}
-    \item \textbf{Static hand gestures}: in which the hand doesn't move and only a snapshot of the position of the fingers is sufficient to recognize the gesture;
-    \item \textbf{Dynamic hand gesture}: in which the hand performs a movement. In this case, a sequence of data is necessary to recognize the gesture. 
-\end{itemize}
-This diversity leads to two different neural networks to classify the hand gesture the user is doing.\\
-The hand gesture recognizer was developed starting from the project of~\citeauthor{site:hand_gesture_base_repo}~\cite{site:hand_gesture_base_repo} to which several improvements were made. Before running the hand gesture detector, the user can choose in which mode running the program:
+The hand gesture recognizer was based on ~\citeauthor{site:hand_gesture_base_repo}'s~\cite{site:hand_gesture_base_repo} project, to which several improvements (i.e., code refactoring to improve readability, code reuse, and reduction of opportunistic copy and paste) and new functionalities were added.
+\subsection{System capabilities and data flows}
+Before running the hand gesture detector, the user can choose which mode to run the program.:
 \begin{itemize}
     \item \textbf{operational};
     \item \textbf{learning};
     \item \textbf{macro}.
 \end{itemize}
 
-\subsubsection{Operational mode}
-Within this mode the operator can do a sequence of hand gesture that will be translated in commands for the robot and will be sent to it through \acrshort{ROS}' communication system
+\subsubsection{Operational mode}\label{sss:operational_mode}
+Within this mode, the operator can do a sequence of hand gestures that will be translated into commands for the robot and will be sent to it through \acrshort{ROS}' communication system.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{thesis/images/systemArchitectureOperational.png}
@@ -124,17 +123,34 @@ Within this mode the operator can do a sequence of hand gesture that will be tra
     \label{fig:system_architecture_operational}
 \end{figure}
 
+Figure~\ref{fig:system_architecture_operational} shows the data flow in the operational mode:
+\begin{enumerate}
+    \item OpenCV receives the data from the webcam and converts it into a frame;
+    \item the frame is given as input to MediaPipe, which handles the hand tracking task and returns the list of landmarks if a hand is detected in the frame;
+    \item the landmarks in the frame are given as input to the ``static hand gesture recognizer'' model. Meanwhile, the landmarks in the frames along with those from the previous $N$ frames are given as input to the ``dynamic hand gesture recognizer'';
+    \item both the recognizers return the predicted gesture;
+    \item both the predicted gestures are taken into input by the ``hand gesture controller'' that decides which action to execute. Section~\ref{ss:hand_gesture_controller} describes in more detail how it works. Generally, it can publish a message on a \acrshort{ROS}' topic or set a navigation goal through the ``Nav2'' package.
+\end{enumerate}
+
 \subsubsection{Learning mode}
-In this mode the user can choose to add a new gesture or enhance one already existing adding more data to the dataset. In both cases, a command line interface is used to interact with the user
+In this mode, the user can choose to add a new gesture or enhance an already existing one by adding more data to the dataset. In both cases, a command-line interface is used to interact with the user.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{thesis/images/systemArchitectureTraining.png}
     \caption{Data flow in learning mode.}
     \label{fig:system_architecture_learning}
 \end{figure}
+Figure~\ref{fig:system_architecture_learning} shows the data flow in the learning mode:
+\begin{enumerate}
+    \item OpenCV receives the data from the webcam and converts it into a frame;
+    \item the frame is given as input to MediaPipe, which handles the hand tracking task and returns the list of landmarks if a hand is detected in the frame;
+    \item if the user chooses to add a new static gesture or enhance an existing one, the landmarks in the frame are saved in the CSV file with the identifier number that refers to the label of the gesture. Otherwise, if the user chooses to add a new dynamic gesture or enhance an existing one, the landmarks in the frames along with those from the previous $N$ frames are saved in the CSV file with the identifier number that refers to the label of the gesture.
+    \item the associated neural network has been trained;
+    \item the model is converted into a TFLite model.
+\end{enumerate}
 
 \subsubsection{Macro mode}
- This mode is similar the the operational but, instead of sending the command in real time to a robot, the user can choose if save a sequence of them in a text file or ``execute'' a previously saved macro's file sending its content to a robot.
+This mode is similar to the operational but, instead of sending the command in real-time to a robot, the user can choose to save a sequence of them in a text file or ``execute'' a previously saved macro file, sending its content to a robot. 
 \begin{figure}[H]
     \centering
 
@@ -151,11 +167,20 @@ In this mode the user can choose to add a new gesture or enhance one already exi
     \end{subfigure}
     
     \caption{Data flows in macro mode.}
-    \label{fig:data_flows}
+    \label{fig:macro_data_flows}
 \end{figure}
+Figure~\ref{fig:system_architecture_save_macro} shows the data flow when a user creates a new macro. The first part is the same as the operation mode explained in section~\ref{sss:operational_mode} but, instead of sending the command to the robot, it is saved in a text file. Figure~\ref{fig:system_architecture_run_macro} shows when a macro is run. The sequence of commands is read from the file created as described above. Then, the commands are given as input to the ``hand gesture controller'' which communicates with the robot as explained in section~\ref{sss:operational_mode}.
+
+\subsection{Hand gesture recognizer}
+The first challenge to solve was the design and implementation of the hand gesture recognizer. In particular, two types of hand gestures were considered: 
+\begin{itemize}
+    \item \textbf{Static hand gestures}: in which the hand does not move and only a snapshot of the finger position is needed to recognize the gesture;
+    \item \textbf{Dynamic hand gesture}: one in which the hand moves. In this case, a sequence of data is necessary to recognize the gesture. 
+\end{itemize}
+This diversity leads to two different neural networks to classify the hand gestures the user is making. 
 
 \subsubsection{Static hand gestures}
-The set of static hand gestures chosen is the \gls{ASL} (in figure~\ref{fig:asl}), \textit{J} \textit{Z} excluded because they involve a movement. To discriminate between dynamic and static gestures, I decided to prioritize the dynamic ones because the user has to perform an action to activate them. Instead, with the static gestures, the hand doesn't move, and the recognizer will always return a prediction. Also the numbers have been excluded.
+The set of static hand gestures chosen is the \gls{ASL} (in figure~\ref{fig:asl}). \textit{J} \textit{Z} are excluded because they involve a movement. To discriminate between dynamic and static gestures, I decided to prioritize the dynamic ones because the user has to perform an action to activate them. Instead, with the static gestures, the hand does not move, and the recognizer will always return a possible prediction. Also, the numbers have been excluded. 
 
 \begin{figure}[H]
     \centering
@@ -164,18 +189,98 @@ The set of static hand gestures chosen is the \gls{ASL} (in figure~\ref{fig:asl}
 \end{figure}
 
 \paragraph{MediaPipe data}
+From MediaPipe, the static hand gesture recognizer gets twenty-one landmarks per frame. These landmarks are shown in figure~\ref{fig:landmarksMediapipe}. The dataset is a CSV file where each line contains:
+\begin{itemize}
+    \item the identifier of the static hand gesture. It refers to the line in the label’s file; 
+    \item 42 42 coordinates (i.e. X and Y) of the 21 landmarks are relative to the zeroth landmark (i.e. the wrist) and normalized. 
+\end{itemize}
 
-\paragraph{Deep neural network}
+\paragraph{Deep neural network}\label{p:static_hand_gesture_deep_neural_network}
+The neural network to recognize the hand gesture starting from MediaPipe's landmarks is a feed-forward network.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{thesis/images/StaticHandGestureModel.png}
+    \caption{Deep neural network for static hand gestures.}
+    \label{fig:static_hand_gesture_model}
+\end{figure}
+Figure~\ref{fig:static_hand_gesture_model} presents the layers in the network:
+\begin{itemize}
+    \item \textbf{input layer}: it takes in input the data from the dataset. Exactly 42 float numbers, representing the relative and already normalized coordinates of the landmarks; 
+    \item \textbf{dropout layer}: it randomly drops the input received, which helps prevent overfitting. If the input is kept, it is passed to the next layer unchanged; 
+    \item \textbf{dense layer}: it is a layer composed of N neurons. Every one of them takes every input received from the previous layer and uses the ReLU activation function to return the output;
+    \item \textbf{output layer}: it is a dense layer with the softmax as activation function.
+\end{itemize}
 
-\paragraph{Training}
+\paragraph{Training}\label{p:static_hand_gesture_training}
+To train the network the script:
+\begin{enumerate}
+    \item reads the dataset file;
+    \item if the user requests it, a random under-sampling is applied;;
+    \item divides the dataset into three non-overlapping subsets (train set, validation set, and evaluation set);
+    \item builds and compiles the network with callbacks to save the model during training, to early stop the training if the loss function does not improve anymore, and log analytics for Tensorboard; 
+    \item trains the network on the train set and validates it with the validation set, gathering accuracy, loss function value, and time spent;
+    \item evaluates the network on the evaluation set;
+    \item converts the model to a Tensorflow Lite model.
+\end{enumerate}
 
 \subsubsection{Dynamic hand gestures}
-
+Six dynamic hand gestures have been chosen to test the system:
+\begin{itemize}
+    \item \textbf{Z}: taken from the \acrshort{ASL};
+    \item \textbf{J}: taken from the \acrshort{ASL};
+    \item \textbf{go to}: to communicate to the robot to move to a location;
+    \item \textbf{pick up}: to communicate to the robot to pick up a parcel;
+    \item \textbf{drop down}: to communicate with the robot in order for the parcel to be dropped down;
+    \item \textbf{static}: for when the hand is not moving.
+\end{itemize}
+The recognition of the dynamic hand gestures, except for \textit{static}, is prioritized over static ones.
 \paragraph{MediaPipe data}
+From MediaPipe, the dynamic hand gesture recognizer gets $N \times history\_length$ landmarks coordinates per each frame. Where $N$ is the number of landmarks shown in figure~\ref{fig:landmarksMediapipe} saved, and $history\_length$ is the previous frames from which to take the landmarks. Indeed, the user can choose how many landmarks to save and how many previous frames to consider. This data is saved in a CSV file where each line contains: 
+\begin{itemize}
+    \item the identifier of the dynamic hand gesture. It refers to the line in the label’s file; 
+    \item $N \times history\_length$ coordinates relatives to the zeroth landmark (i.e. the wrist) and normalized.
+\end{itemize}
 
 \paragraph{Deep neural network}
+I tried two neural networks to recognize the dynamic hand gestures starting from MediaPipe's landmarks history. The first one is a feed-forward network.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{thesis/images/DynamicHandGestureModelFeedForward.png}
+    \caption{Deep feed-forward neural network for dynamic hand gestures.}
+    \label{fig:ff_model_dynamic_hand_gestures}
+\end{figure}
+Figure~\ref{fig:ff_model_dynamic_hand_gestures} presents the layers in the network.  They are the same as those present in paragraph~\ref{p:static_hand_gesture_deep_neural_network}.
+The second one is an \acrshort{LSTM} network.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{thesis/images/DynamicHandGestureModelLSTM.png}
+    \caption{\acrshort{LSTM} neural network for dynamic hand gestures.}
+    \label{fig:lstm_model_dynamic_hand_gestures}
+\end{figure}
+In the model presented in figure~\ref{fig:lstm_model_dynamic_hand_gestures}, the input is first reshaped to group together the landmark coordinates from the same frame. Then an LSTM layer is used, cycling through the  $history\_length$. This model should perform better because it exploits the potential of a recurrent neural network to learn from a time series.
 
 \paragraph{Training}
+The training is similar to the one presented in paragraph~\ref{p:static_hand_gesture_training}, with the addition of the possibility for the user to choose which model to use.
+
+\subsection{Hand gesture controller}\label{ss:hand_gesture_controller}
+The hand gesture controller is the component that takes as input the recognized hand gestures and converts them into the correct command for the robot. To ensure the correctness of the sequence of gestures, the user has to describe it as a finite-state automaton. The configuration file is a JSON file that requires the user to define:
+\begin{itemize}
+    \item a list of transitions. Each transition is defined by:
+    \begin{itemize}
+        \item from which state it comes;
+        \item to which state it is directed;
+        \item with which element of the alphabet it is triggered;
+        \item the action to perform when the transition is triggered. It can be:
+        \begin{itemize}
+            \item \textbf{null} when no action is performed;
+            \item \textbf{set a navigation goal} specifying the coordinates;
+            \item \textbf{send a message} specifying on which topic publish the message and the raw data to send.
+        \end{itemize}
+    \end{itemize}
+    \item the initial state.
+\end{itemize}
+To better interact with the robot, the coordinates and the raw data for the messages can be interpolated with the element of the alphabet that trigger the transition. An example of configuration file can be found in~\ref{appendix:automaton_configuration_file}.
 
 \subsection{Integration with ROS}
+
 \end{document}
