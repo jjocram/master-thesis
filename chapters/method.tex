@@ -282,5 +282,15 @@ The hand gesture controller is the component that takes as input the recognized 
 To better interact with the robot, the coordinates and the raw data for the messages can be interpolated with the element of the alphabet that trigger the transition. An example of configuration file can be found in~\ref{appendix:automaton_configuration_file}.
 
 \subsection{Integration with ROS}
+TBD
+
+\section{Data collection}
+\subsection{Hand gesture recognizer}
+To collect data from the hand gesture recognizer Tensorboard and Tensorflow metrics have been used. Tensorboard has been connected to the train scripts as the documentation explains. Moreover, the evaluation dataset, obtained from both the static hand gestures dataset and the dynamic hand gestures dataset has been exploited to evaluate the trained network on data it has never seen. The data gathered in this way are:
+\begin{itemize}
+    \item accuracy;
+    \item latest loss function value.
+\end{itemize}
+The time is taken exploiting Python's decorators. Before calling the \texttt{fit} method the time is taken and when the training is finished the time is taken again. The delta between the two times is the time spent for training.
 
 \end{document}
