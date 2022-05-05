@@ -72,4 +72,61 @@ With the help of neural networks, there are several ways to achieve good results
 \end{itemize}
 One of the most famous regression-based algorithms is \glsfirst{YOLO}, but it is not the only possible solution to perform this kind of task. Another technique that gives promising results is the combination of the MediaPipe hand tracker, which section~\ref{sec:mediapipe} describes, and a feed-forward neural network to recognize the gesture.\\ All these kinds of solutions suit well in the case of static hand gestures. As  \citeauthor{site:hand_gesture_base_repo} shows in his repository\cite{site:hand_gesture_base_repo}, working with a history of landmarks is possible. For this kind of task, a \glsfirst{LSTM} neural network is a good starting point. This kind of network tries to add the knowledge of past events to the computation. To do so, there are loops inside them that allow information to persist~\cite{site:understanding_lstm_networks}.
 
+\section{Robot Operating System}
+\acrfull{ROS} is an open-source set of libraries and tools to develop robot applications. The key points to understand when using \acrshort{ROS} are related to the ``ROS 2 Graph'', and they are:
+\begin{itemize}
+    \item \textbf{Node}: a system component in charge of a specific task. It is an executable, in my case, a Python executable, but it could also be a C++ executable, and it can communicate with other nodes, exchanging messages. A robotic system is composed of multiple nodes; 
+    \item \textbf{Message}: the method by which nodes exchange data. Each message has its own ``type'', and this brings advantages in building an interchangeable system because it is possible to change the components of the system with others that can understand the same messages. Messages, in this case, can be seen as interfaces for programming languages. There are three ways for nodes to exchange messages: 
+        \begin{itemize}
+            \item \textbf{Topic};
+            \item \textbf{Service};
+            \item \textbf{Action}.
+        \end{itemize}
+\end{itemize}
+\subsection{Exchange messages}
+\paragraph{Topic}
+It is an implementation of the publisher/subscriber pattern. A node can publish messages with a topic, and every other node that is listening to that topic will read that message. This is an asynchronous way of exchanging messages because the sender will not know if the message has been read. For example, this is the best way to broadcast a message without saturating the network. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\columnwidth]{thesis/images/topicExample.png}
+    \caption{Example of message exchange between three nodes using a topic.}
+    \label{fig:exampleTopicExchangeMessage}
+\end{figure}
+
+\paragraph{Service}
+It is based on a call-response model. In this case, a node requests some data from another node through a request message. The latter replies with a response message. This is a synchronous way of exchanging messages. The node that needs the data waits for the response. There can be many nodes that use the same service to request some data from another node. This is a bit like what happens in a client-server architecture, but it should not be used for long-running processes. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{thesis/images/serviceExample.png}
+    \caption{Example of messages exchange between three nodes using a service.}
+    \label{fig:exampleServiceExchangeMessage}
+\end{figure}
+
+\paragraph{Action}
+It uses both topics and services. The functionality is similar to service with the addition of a constant stream of updates from the ``server'' through a topic to which the ``client'' subscribes. The sequence of actions is the following: 
+    \begin{enumerate}
+        \item A node (i.e.\ the client) sends a message (the request for a goal) through a service to another node  (i.e.\ the server). The latter replies with one message through the service. For example, it can reply with an acknowledgment or a message saying it has started working on a task; 
+        \item The server keeps the client updated with the progress of the task through a topic; 
+        \item The client sends a request through another service to the server. When the task is finished, the server will reply to the client. 
+    \end{enumerate}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\columnwidth]{thesis/images/actionExample.png}
+    \caption{Example of messages exchange between two nodes using an action.}
+    \label{fig:exampleActionExchangeMessage}
+\end{figure}
+
+\subsection{Communication between nodes over the network}
+\gls{ROS} uses \glsfirst{DDS} as an end-to-end middleware to exchange messages:  This difference is one of the main differences between \gls{ROS} version 1 and \gls{ROS} version 2. The \gls{DDS} was chosen by the \gls{ROS} maintainer for its reliability and flexibility in mission-critical systems, such as:
+\begin{itemize}
+    \item battleships;
+    \item extensive utility installations;
+    \item monetary systems;
+    \item spacecraft;
+    \item flight control systems;
+    \item train switchboard systems.
+\end{itemize}
+The implementation of \gls{DDS} is hidden from the user, who uses the three methods described above with the \gls{ROS} API to exchange messages. More information can be found on the article written by \citeauthor{site:ros_dds}~\cite{site:ros_dds}.
+
+
 \end{document}

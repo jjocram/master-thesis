@@ -40,60 +40,7 @@ It is interesting to point out that MediaPipe is capable of tracking, in real-ti
 OpenCV is an open-source library that fully meets the requirements regarding computer vision and works well with MediaPipe. It is also distributed as a Python package to integrate into users' applications. 
 
 \subsection{Robot Operating System}
-\acrfull{ROS} is an open-source set of libraries and tools to develop robot applications. The latest release, and the one used for this project, is \textit{ROS Galactic Geochelone}. The key points to understand when using \acrshort{ROS} are related to the ``ROS 2 Graph'', and they are:
-\begin{itemize}
-    \item \textbf{Node}: a system component in charge of a specific task. It is an executable, in my case, a Python executable, but it could also be a C++ executable, and it can communicate with other nodes, exchanging messages. A robotic system is composed of multiple nodes; 
-    \item \textbf{Message}: the method by which nodes exchange data. Each message has its own ``type'', and this brings advantages in building an interchangeable system because it is possible to change the components of the system with others that can understand the same messages. Messages, in this case, can be seen as interfaces for programming languages. There are three ways for nodes to exchange messages: 
-        \begin{itemize}
-            \item \textbf{Topic};
-            \item \textbf{Service};
-            \item \textbf{Action}.
-        \end{itemize}
-\end{itemize}
-\subsubsection{Exchange messages}
-\paragraph{Topic}
-It is an implementation of the publisher/subscriber pattern. A node can publish messages with a topic, and every other node that is listening to that topic will read that message. This is an asynchronous way of exchanging messages because the sender will not know if the message has been read. For example, this is the best way to broadcast a message without saturating the network. 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.7\columnwidth]{thesis/images/topicExample.png}
-    \caption{Example of message exchange between three nodes using a topic.}
-    \label{fig:exampleTopicExchangeMessage}
-\end{figure}
-
-\paragraph{Service}
-It is based on a call-response model. In this case, a node requests some data from another node through a request message. The latter replies with a response message. This is a synchronous way of exchanging messages. The node that needs the data waits for the response. There can be many nodes that use the same service to request some data from another node. This is a bit like what happens in a client-server architecture, but it should not be used for long-running processes. 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\columnwidth]{thesis/images/serviceExample.png}
-    \caption{Example of messages exchange between three nodes using a service.}
-    \label{fig:exampleServiceExchangeMessage}
-\end{figure}
-
-\paragraph{Action}
-It uses both topics and services. The functionality is similar to service with the addition of a constant stream of updates from the ``server'' through a topic to which the ``client'' subscribes. The sequence of actions is the following: 
-    \begin{enumerate}
-        \item A node (i.e.\ the client) sends a message (the request for a goal) through a service to another node  (i.e.\ the server). The latter replies with one message through the service. For example, it can reply with an acknowledgment or a message saying it has started working on a task; 
-        \item The server keeps the client updated with the progress of the task through a topic; 
-        \item The client sends a request through another service to the server. When the task is finished, the server will reply to the client. 
-    \end{enumerate}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\columnwidth]{thesis/images/actionExample.png}
-    \caption{Example of messages exchange between two nodes using an action.}
-    \label{fig:exampleActionExchangeMessage}
-\end{figure}
-
-\subsubsection{Communication between nodes over the network}
-\gls{ROS} uses \glsfirst{DDS} as an end-to-end middleware to exchange messages:  This difference is one of the main differences between \gls{ROS} version 1 and \gls{ROS} version 2. The \gls{DDS} was chosen by the \gls{ROS} maintainer for its reliability and flexibility in mission-critical systems, such as:
-\begin{itemize}
-    \item battleships;
-    \item extensive utility installations;
-    \item monetary systems;
-    \item spacecraft;
-    \item flight control systems;
-    \item train switchboard systems.
-\end{itemize}
-The implementation of \gls{DDS} is hidden from the user, who uses the three methods described above with the \gls{ROS} API to exchange messages. More information can be found on the article written by \citeauthor{site:ros_dds}~\cite{site:ros_dds}.
+The latest release, and the one used for this project, is \textit{ROS Galactic Geochelone}.
 
 \subsubsection{Navigation}
 ``Nav 2'' is the navigation system provided by \gls{ROS}. A developer can choose to use their navigation system, but the one developed by ~\citeauthor{paper:navigation2} is widely tested and supported~\cite{paper:navigation2}. 
@@ -263,7 +210,19 @@ In the model presented in figure~\ref{fig:lstm_model_dynamic_hand_gestures}, the
 The training is similar to the one presented in paragraph~\ref{p:static_hand_gesture_training}, with the addition of the possibility for the user to choose which model to use.
 
 \subsection{Hand gesture controller}\label{ss:hand_gesture_controller}
-The hand gesture controller is the component that takes as input the recognized hand gestures and converts them into the correct command for the robot. To ensure the correctness of the sequence of gestures, the user has to describe it as a finite-state automaton. The configuration file is a JSON file that requires the user to define:
+The hand gesture controller is the component that takes as input the recognized hand gestures and converts them into the correct command for the robot. To better have a modular system the hierarchy in figure~\ref{fig:controller-class-diagram} has been implemented.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{thesis/images/ControllerClassDiagram.png}
+    \caption{UML class diagram for the hand gesture controller.}
+    \label{fig:controller-class-diagram}
+\end{figure}
+
+The class \textit{BaseController} handles the communication between the hand gesture recognizer and the automaton that will communicate with the robot. The \textit{HandGestureController} implements the method \textit{consumer\_input} telling to the automaton to send the messages to the robot in contrast to the \textit{MacroController} that does not. Instead, it saves on a text file the sequence of gestures made by the operator with the purpose to use them in another moment.
+
+\subsubsection{Automaton}
+To ensure the correctness of the sequence of gestures, the user has to describe it as a finite-state automaton. The configuration file is a JSON file that requires the user to define:
 \begin{itemize}
     \item a list of transitions. Each transition is defined by:
     \begin{itemize}
@@ -274,7 +233,7 @@ The hand gesture controller is the component that takes as input the recognized 
         \begin{itemize}
             \item \textbf{null} when no action is performed;
             \item \textbf{set a navigation goal} specifying the coordinates;
-            \item \textbf{send a message} specifying on which topic publish the message and the raw data to send.
+            \item \textbf{send a message} specifying on which topic publish the message, its type, and the raw data to send.
         \end{itemize}
     \end{itemize}
     \item the initial state.
@@ -282,7 +241,37 @@ The hand gesture controller is the component that takes as input the recognized 
 To better interact with the robot, the coordinates and the raw data for the messages can be interpolated with the element of the alphabet that trigger the transition. An example of configuration file can be found in~\ref{appendix:automaton_configuration_file}.
 
 \subsection{Integration with ROS}
-TBD
+The integration with \acrshort{ROS} is managed through two Python packages:
+\begin{itemize}
+    \item \textbf{rclpy}: it comes with the installation of \acrshort{ROS} as described in the documentation and it handles the raw communication between the hand gesture controller and the robot;
+    \item \textbg{nav2}: package which implement the Nav2 navigation algorithm. It has been installed with pip after cloning the GitHub repository (\href{https://github.com/ros-planning/navigation2.git}{https://github.com/ros-planning/navigation2.git}) with the following command:\newline\texttt{pip3 install navigation2/nav2\_simple\_commander/}
+\end{itemize}
+First and foremost the \textit{rclpy} is initialized with the statement \texttt{rclpy.init()}. Then, the hand gesture controller can either publish a message to a topic or set a goal for navigation based on the triggered automaton transition.
+\begin{itemize}
+    \item send a message: the topic, the message type, and the data for the message are taken from the transition details described in the automaton configuration file. Then, the correct publisher is retrieved and used to publish the message.
+    \item set a navigation goal: the coordinates are taken from the transition details described in the automaton configuration file. Then, the position is given as input to the navigator which returns a feedback until the task is completed. When the task is completed, it return the status of the operation:
+    \begin{itemize}
+        \item succeeded: if the robot reach the goal correctly;
+        \item cancelled: if the operator cancelled the task;
+        \item failed: if the robot can't reach the set goal for any reason.
+    \end{itemize}
+\end{itemize}
+
+\section{Documentation}
+To make the system as understandable as possible a proper documentation has been written. To ensure its readiness \textit{MkDocs} has been used with the theme \textit{MkDocs Material} and \textit{Ligthgallery} to manage the images. Instead, to ensure its availability \textit{GitHub Pages} and \textit{GitHub Actions} have been used. In this way it is available for everyone at the link \href{https://jjocram.github.io/hand-gesture/}{https://jjocram.github.io/hand-gesture/}. The documentation explains how to:
+\begin{itemize}
+    \item Setup the environment;
+    \item Run the simulation
+    \item Understand how the program works. In particular it explains:
+    \begin{itemize}
+        \item the \texttt{main} function;
+        \item the \texttt{GestureDetector} class;
+        \item the \texttt{AutomataManager} class;
+        \item the \texttt{GestureController} class;
+        \item the \texttt{MacroController} class;
+        \item the \texttt{MacroRunner} class.
+    \end{itemize}
+\end{itemize}
 
 \section{Data collection}
 \subsection{Hand gesture recognizer}

@@ -24,7 +24,7 @@ Figure~\ref{fig:automata_for_commands} shows the transition diagram for the auto
     \item \textbf{$q_4$}: robot waiting for a ``direction'' with a parcel.
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \resizebox{0.8\textwidth}{!}{%
     \begin{tikzpicture}[node distance = 4cm, on grid]
@@ -61,7 +61,7 @@ The dataset is composed of $3707$ elements divided in $24$ labels. The labels ar
 \end{figure}
 
 \subsubsection{Tests}
-In table~\ref{tab:tests_static_hand_gestures} are listed the tests performed to find the best configuration to recognize static hand gestures. ``Not defined'' in the column of ``Number of elements per class'' means that the whole dataset, described in~\ref{ss:dataset_static_gestures}, has been used to train the network
+In table~\ref{tab:tests_static_hand_gestures} are listed the tests performed to find the best configuration to recognize static hand gestures. ``Not defined'' in the column of ``Number of elements per class'' means that the whole dataset, described in~\ref{ss:dataset_static_gestures}, has been used to train the network.
 \begin{table}[H]
 \begin{tabular}{|c|c|c|}
 \hline
@@ -78,7 +78,9 @@ full\_dataset\_dropout & Not defined                           & 0.2            
 I mainly focused on finding the minimum amount of samples in order to obtain a good accuracy and a short training time. 
 
 \subsubsection{Results}
+The data gathered during the training are shown in table~\ref{tab:result_static_hand_gestures} and has been plotted. The graphs are shown in figure~\ref{fig:results_graphs_static_hand_gestures} and~\ref{fig:performances_dynamic_hand_gestures}.
 \begin{table}[H]
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{|c|c|c|c|}
 \hline
 \textbf{Test name}          & \textbf{Evaluation accuracy} & \textbf{Evaluation loss} & \textbf{Training time} \\ \hline
@@ -88,7 +90,8 @@ full\_dataset\_dropout & 0.99                         & 0.01                    
 7\_samples                  & 1                            & 0.04                     & 15s 804ms              \\ \hline
 6\_samples                  & 1                            & 0.009                    & 31s 839ms              \\ \hline
 5\_samples                  & 0.27                         & 2.90                     & 4s 551ms               \\ \hline
-\end{tabular}
+\end{tabular}%
+}
 \caption{Results for training the static hand gesture recognizer.}
 \label{tab:result_static_hand_gestures}
 \end{table}
@@ -117,6 +120,22 @@ full\_dataset\_dropout & 0.99                         & 0.01                    
      \end{subfigure}
         \caption{Results graphs for the training of the static hand gesture recognizer}
         \label{fig:results_graphs_static_hand_gestures}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \includegraphics[width=\textwidth]{thesis/images/keypoint_accuracy.png}
+        \caption{Accuracy performance in the different runs of the static hand gestures.}
+        \label{fig:accuracy_performance_static_hand_gestures}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{\textwidth}
+        \includegraphics[width=\textwidth]{thesis/images/keypoint_loss.png}
+        \caption{Loss performance in the different runs of the static hand gestures.}
+        \label{fig:loss_performance_static_hand_gestures}
+    \end{subfigure}
+    \caption{Performances in the different runs of the static hand gestures.}
 \end{figure}
 
 \subsection{Dynamic hand gesture}
@@ -148,7 +167,9 @@ Two datasets have been used:
 \end{figure}
 
 \subsubsection{Tests}
+In table~\ref{tab:tests_dynamic_hand_gestures} are listed the tests performed to find the best configuration to recognize dynamic hand gestures. ``Not defined'' in the column ``Number of elements per class'' means that the whole dataset (specified in column ``Dataset'') has been used.
 \begin{table}[H]
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{|c|c|c|c|}
 \hline
 \textbf{Test name} & \textbf{Dataset} & \textbf{Network type} & \textbf{Number of elements per class} \\ \hline
@@ -161,12 +182,15 @@ full\_dataset      & five\_fingers    & lstm                  & Not defined     
 full\_dataset      & one\_finger      & feed\_forward         & Not defined                           \\ \hline
 50\_samples        & one\_finger      & feed\_forward         & 50                                    \\ \hline
 10\_samples        & one\_finger      & feed\_forward         & 10                                    \\ \hline
-\end{tabular}
+\end{tabular}%
+}
+As for the static hand gesture recognizer, I focused on finding the minimum size of the dataset in order to obtain a good accuracy and a short training time.
 \caption{Training configurations for the dynamic hand gesture classifier.}
 \label{tab:tests_dynamic_hand_gestures}
 \end{table}
 
 \subsubsection{Results}
+The data gathered during the training are shown in table~\ref{tab:result_dynamic_hand_gestures} and has been plotted. The graphs are shown in figure~\ref{fig:results_graphs_dynamic_hand_gestures} and~\ref{fig:performances_dynamic_hand_gestures}.
 \begin{table}[H]
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{|c|c|c|c|c|c|}
@@ -193,24 +217,45 @@ full\_dataset      & one\_finger      & feed\_forward         & 0.93            
          \centering
          \includegraphics[width=\textwidth]{thesis/images/training_time_dynamic_hand_gestures.png}
          \caption{Training time in tests dynamic hand gestures.}
-         \label{fig:training_time_static_hand_gestures}
+         \label{fig:training_time_dynamic_hand_gestures}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.45\textwidth}
          \centering
          \includegraphics[width=\textwidth]{thesis/images/evaluation_accuracy_dynamic_hand_gestures.png}
          \caption{Accuracy in tests dynamic hand gestures.}
-         \label{fig:evaluation_accuracy_static_hand_gestures}
+         \label{fig:evaluation_accuracy_dynamic_hand_gestures}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.45\textwidth}
          \centering
          \includegraphics[width=\textwidth]{thesis/images/evaluation_loss_dynamic_hand_gestures.png}
          \caption{Loss in tests dynamic hand gestures.}
-         \label{fig:evaluation_loss_static_hand_gestures.}
+         \label{fig:evaluation_loss_dynamic_hand_gestures.}
      \end{subfigure}
         \caption{Results graphs for the training of the dynamic hand gesture recognizer}
-        \label{fig:results_graphs_static_hand_gestures}
+        \label{fig:results_graphs_dynamic_hand_gestures}
 \end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{thesis/images/point_history_accuracy.png}
+    \caption{Accuracy performance in the different runs of the dynamic hand gestures.}
+    \label{fig:accuracy_performance_dynamic_hand_gestures}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{thesis/images/point_history_loss.png}
+    \caption{Loss performance in the different runs of the dynamic hand gestures.}
+    \label{fig:loss_performance_dynamic_hand_gestures}
+\end{subfigure}
+\caption{Performances in the different runs of the dynamic hand gestures.}
+\label{fig:performances_dynamic_hand_gestures}
+\end{figure}
+
+\section{Integration with ROS}
 
 \end{document}
