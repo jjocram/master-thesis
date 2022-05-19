@@ -72,8 +72,46 @@ With the help of neural networks, there are several ways to achieve good results
 \end{itemize}
 One of the most famous regression-based algorithms is \glsfirst{YOLO}, but it is not the only possible solution to perform this kind of task. Another technique that gives promising results is the combination of the MediaPipe hand tracker, which section~\ref{sec:mediapipe} describes, and a feed-forward neural network to recognize the gesture.\\ All these kinds of solutions suit well in the case of static hand gestures. As  \citeauthor{site:hand_gesture_base_repo} shows in his repository\cite{site:hand_gesture_base_repo}, working with a history of landmarks is possible. For this kind of task, a \glsfirst{LSTM} neural network is a good starting point. This kind of network tries to add the knowledge of past events to the computation. To do so, there are loops inside them that allow information to persist~\cite{site:understanding_lstm_networks}.
 
-\section{Robot Operating System}
-\acrfull{ROS} is an open-source set of libraries and tools to develop robot applications. The key points to understand when using \acrshort{ROS} are related to the ``ROS 2 Graph'', and they are:
+\section{Robot Operating System (ROS)}
+\acrshort{ROS} born as a framework to design robot software. Its initial presentation was in \citeyear{paper:ros} by \citeauthor{paper:ros}~\cite{paper:ros}. In particular it tries to solve the problem of communication but, it has also many other characteristics that make it a good framework for robot development.
+\subsection{Communication}
+A system based on \acrshort{ROS} has a \textit{peer-to-peer} topology. Each node of the network can communicate with any other node. The first version of \acrshort{ROS} implemented a custom communication layer but, from the second version onwards, it implements the \glsfirst{DDS} protocol.
+\subsubsection{Data Distribution Service (DDS)}
+\gls{ROS} uses \gls{DDS} as an end-to-end middleware to exchange messages: This difference is one of the main differences between \gls{ROS} version 1 and \gls{ROS} version 2. The \gls{DDS} was chosen by the \gls{ROS} maintainer for its reliability and flexibility in mission-critical systems, such as:
+\begin{itemize}
+    \item battleships;
+    \item extensive utility installations;
+    \item monetary systems;
+    \item spacecraft;
+    \item flight control systems;
+    \item train switchboard systems.
+\end{itemize}
+The implementation of \gls{DDS} is hidden from the user, who uses the methods described in sectio~\ref{sss:exchange_messages} with the \gls{ROS} API to exchange messages. A complete explanation for this change has been given by the developers and can be found on the article written by \citeauthor{site:ros_dds}~\cite{site:ros_dds}.
+
+\subsection{Multi-lingual}
+\gls{ROS} supports many programming languages. In particular C++ and Python are the most documented. Each supported language has its own implementation of the communication layer. In this way the developer can follow the best practice for each one but, it is possible to wrap the already written library into another language. ``The end result is a language-neutral message processing scheme where different languages can be mixed and matched as desired.''~\cite{paper:ros}
+
+\subsection{Tools-based}
+The developers of \gls{ROS} have decided to adopt a \textit{microkernel} design. In this way they produced different tools and, each of them perform a task:
+\begin{itemize}
+    \item navigate the source code tree;
+    \item get and set configuration parameters;
+    \item visualize the network topology;
+    \item measure the band-with utilization;
+    \item graphically plot message data;
+    \item generate documentation;
+    \item launch sequence of tasks
+\end{itemize}
+and many others.
+
+\subsection{Thin}
+\gls{ROS}' developers encourage the creation of small executables by leaving the complexity in the dependencies. This promotes writing code reusable also in other projects.
+
+\subsection{Free and Open-Source}
+\gls{ROS} is free and Open-Source, this has created a strong community around the framework. The community helps finding bugs and developing new algorithms accessible to everyone.
+
+\subsection{Nomenclature}
+The key points to understand when using \acrshort{ROS} are related to the ``ROS 2 Graph'', and they are:
 \begin{itemize}
     \item \textbf{Node}: a system component in charge of a specific task. It is an executable, in my case, a Python executable, but it could also be a C++ executable, and it can communicate with other nodes, exchanging messages. A robotic system is composed of multiple nodes; 
     \item \textbf{Message}: the method by which nodes exchange data. Each message has its own ``type'', and this brings advantages in building an interchangeable system because it is possible to change the components of the system with others that can understand the same messages. Messages, in this case, can be seen as interfaces for programming languages. There are three ways for nodes to exchange messages: 
@@ -83,8 +121,9 @@ One of the most famous regression-based algorithms is \glsfirst{YOLO}, but it is
             \item \textbf{Action}.
         \end{itemize}
 \end{itemize}
-\subsection{Exchange messages}
-\paragraph{Topic}
+
+\subsubsection{Exchange messages}\label{sss:exchange_messages}
+\paragraph{Topic}\label{p:exchange_message_with_topics}
 It is an implementation of the publisher/subscriber pattern. A node can publish messages with a topic, and every other node that is listening to that topic will read that message. This is an asynchronous way of exchanging messages because the sender will not know if the message has been read. For example, this is the best way to broadcast a message without saturating the network. 
 \begin{figure}[H]
     \centering
@@ -102,7 +141,7 @@ It is based on a call-response model. In this case, a node requests some data fr
     \label{fig:exampleServiceExchangeMessage}
 \end{figure}
 
-\paragraph{Action}
+\paragraph{Action}\label{p:exchange_message_with_actions}
 It uses both topics and services. The functionality is similar to service with the addition of a constant stream of updates from the ``server'' through a topic to which the ``client'' subscribes. The sequence of actions is the following: 
     \begin{enumerate}
         \item A node (i.e.\ the client) sends a message (the request for a goal) through a service to another node  (i.e.\ the server). The latter replies with one message through the service. For example, it can reply with an acknowledgment or a message saying it has started working on a task; 
@@ -115,18 +154,5 @@ It uses both topics and services. The functionality is similar to service with t
     \caption{Example of messages exchange between two nodes using an action.}
     \label{fig:exampleActionExchangeMessage}
 \end{figure}
-
-\subsection{Communication between nodes over the network}
-\gls{ROS} uses \glsfirst{DDS} as an end-to-end middleware to exchange messages:  This difference is one of the main differences between \gls{ROS} version 1 and \gls{ROS} version 2. The \gls{DDS} was chosen by the \gls{ROS} maintainer for its reliability and flexibility in mission-critical systems, such as:
-\begin{itemize}
-    \item battleships;
-    \item extensive utility installations;
-    \item monetary systems;
-    \item spacecraft;
-    \item flight control systems;
-    \item train switchboard systems.
-\end{itemize}
-The implementation of \gls{DDS} is hidden from the user, who uses the three methods described above with the \gls{ROS} API to exchange messages. More information can be found on the article written by \citeauthor{site:ros_dds}~\cite{site:ros_dds}.
-
 
 \end{document}

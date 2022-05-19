@@ -43,7 +43,14 @@ OpenCV is an open-source library that fully meets the requirements regarding com
 The latest release, and the one used for this project, is \textit{ROS Galactic Geochelone}.
 
 \subsubsection{Navigation}
-``Nav 2'' is the navigation system provided by \gls{ROS}. A developer can choose to use their navigation system, but the one developed by ~\citeauthor{paper:navigation2} is widely tested and supported~\cite{paper:navigation2}. 
+``Nav 2'' is the navigation system provided by \gls{ROS}. A developer can choose to use their navigation system, but the one developed by ~\citeauthor{paper:navigation2} is widely tested and supported~\cite{paper:navigation2}. It uses a set of actions whose behaviour is described is section~\ref{p:exchange_message_with_actions} and provides complete set of API to control the robot. Specifically, those used were:
+\begin{itemize}
+    \item \texttt{setInitialPose}: to set the initial position of the robot;
+    \item \texttt{goToPose}: to tell to the robot to reach a position;
+    \item \texttt{isTaskComplete}: to know when the task is finished;
+    \item \texttt{getFeedback}: to receive a feedback (i.e. the current position) from the robot.
+\end{itemize}
+A complete list of what this package is capable can be found on the Nav2 documentation: \href{https://github.com/ros-planning/navigation2/tree/main/nav2_simple_commander}{https://github.com/ros-planning/navigation2/tree/main/nav2\_simple\_commander}
 
 \subsection{Gazebo simulator}
 Gazebo is an open-source simulator for simulating environments involving robots. Gazebo offers the ability to accurately and efficiently simulate populations of robots in complex indoor and outdoor environments. Moreover, there is the possibility to use different robot models using \glsfirst{SDF}  files and import Collada files into the simulated world. Gazebo is also expandable with plugins. One of those lets you use \acrshort{ROS} to communicate with the robots inside the simulation. I used the Gazebo simulator to perform some tests before deploying the software in a real environment.  
@@ -214,7 +221,7 @@ The hand gesture controller is the component that takes as input the recognized 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{thesis/images/ControllerClassDiagram.png}
+    \includegraphics[width=1\textwidth]{thesis/images/ControllerClassDiagram.png}
     \caption{UML class diagram for the hand gesture controller.}
     \label{fig:controller-class-diagram}
 \end{figure}
@@ -248,7 +255,7 @@ The integration with \acrshort{ROS} is managed through two Python packages:
 \end{itemize}
 First and foremost the \textit{rclpy} is initialized with the statement \texttt{rclpy.init()}. Then, the hand gesture controller can either publish a message to a topic or set a goal for navigation based on the triggered automaton transition.
 \begin{itemize}
-    \item send a message: the topic, the message type, and the data for the message are taken from the transition details described in the automaton configuration file. Then, the correct publisher is retrieved and used to publish the message.
+    \item send a message: the topic, the message type, and the data for the message are taken from the transition details described in the automaton configuration file. Then, the correct publisher is retrieved and used to publish the message. This kind of action exploits the message exchange system of topics explained in section~\ref{p:exchange_message_with_topics}
     \item set a navigation goal: the coordinates are taken from the transition details described in the automaton configuration file. Then, the position is given as input to the navigator which returns a feedback until the task is completed. When the task is completed, it return the status of the operation:
     \begin{itemize}
         \item succeeded: if the robot reach the goal correctly;
@@ -257,11 +264,22 @@ First and foremost the \textit{rclpy} is initialized with the statement \texttt{
     \end{itemize}
 \end{itemize}
 
+\subsection{User interface}
+When the user select a mode that involves the use of the camera a window appears showing to the user what the camera is watching, the number of FPS, the recognized gestures, and the selected mode. Moreover, it shows also the hand's landmarks (i.e. the black points), the joints between them, and the landmarks used for the history of key-points in green with a trail when the hand moves. Figure~\ref{fig:example_ui}, for example, shows the recognition of the gesture \texit{F} as static gesture and \textit{Static} as dynamic.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{thesis/images/UI.png}
+    \caption{User interface of the program when the webcam is used}
+    \label{fig:example_ui}
+\end{figure}
+
 \section{Documentation}
 To make the system as understandable as possible a proper documentation has been written. To ensure its readiness \textit{MkDocs} has been used with the theme \textit{MkDocs Material} and \textit{Ligthgallery} to manage the images. Instead, to ensure its availability \textit{GitHub Pages} and \textit{GitHub Actions} have been used. In this way it is available for everyone at the link \href{https://jjocram.github.io/hand-gesture/}{https://jjocram.github.io/hand-gesture/}. The documentation explains how to:
 \begin{itemize}
     \item Setup the environment;
-    \item Run the simulation
+    \item Run the simulation;
+    \item Interact with the program;
     \item Understand how the program works. In particular it explains:
     \begin{itemize}
         \item the \texttt{main} function;
@@ -271,6 +289,7 @@ To make the system as understandable as possible a proper documentation has been
         \item the \texttt{MacroController} class;
         \item the \texttt{MacroRunner} class.
     \end{itemize}
+    \item Train the neural networks;
 \end{itemize}
 
 \section{Data collection}
@@ -281,5 +300,8 @@ To collect data from the hand gesture recognizer Tensorboard and Tensorflow metr
     \item latest loss function value.
 \end{itemize}
 The time is taken exploiting Python's decorators. Before calling the \texttt{fit} method the time is taken and when the training is finished the time is taken again. The delta between the two times is the time spent for training.
+
+\subsection{System resource utilization}
+To collect data while the program is running I wrote a Python script that launch a process (i.e. the recognizer) and collect CPU and RAM usage over time.
 
 \end{document}

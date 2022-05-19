@@ -1,0 +1,37 @@
+@startuml
+
+title Controllers - Class Diagram
+
+package controller {
+abstract class BaseController {
+  -last_static : int
+  -last_dynamic : int
+  -sending_message : Lock
+  -automata : AutomataManager
+  -_get_gesture(static_gesture_buffer, dynamic_gesture_buffer) : str
+  -_consume_gesture(static_gesture_buffer, dynamic_gesture_buffer, input_accepted_callback) : void
+  +{abstract}consume_gesture(static_gesture_buffer, dynamic_gesture_buffer) : void
+}
+
+class GestureController extends BaseController{
+  +consume_gesture(static_gesture_buffer, dynamic_gesture_buffer) : void
+}
+
+class MacroController extends BaseController{
+  -macro_file_path : str
+  -_write_on_file(self, input_gesture) : void
+  +consume_gesture(static_gesture_buffer, dynamic_gesture_buffer) : void
+}
+}
+
+class AutomataManager {
+  +consume_input(specific_input) : bool
+}
+
+class GestureBuffer {
+  +get_gesture() : int
+}
+
+BaseController -r-> GestureBuffer
+BaseController::automata *-l-> AutomataManager
+@enduml
