@@ -1,6 +1,116 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
 \appendix
+\chapter{Data gathering}
+\section{JSON file complexity}\label{appendix:complexity_algorithm}
+\begin{lstlisting}[caption=JavaScript script to compute the complexity of a JSON file]
+const {isNull} = require('util');
+
+fs = require('fs')
+
+let isType = (val, Cls) => val != null && val.constructor === Cls;
+let getComplexity = (json, d=1.05) => {
+  
+  // Here `d` is our "depth factor"
+  
+  return d * (() => {
+
+    // String
+    if (isType(json, String)) return 1;
+
+    // Number
+    if (isType(json, Number)) return 1;
+
+    // Null values 
+    if (isNull(json)) return 1;
+
+    // Arrays are 1 + (average complexity of nested elements)
+    if (isType(json, Array)) {
+      let avg = json.reduce((o, v) => o + getComplexity(v, d), 0) / (json.length || 1);
+      return avg + 1;
+    }
+
+    // Objects are 1 + (average complexity of their keys) + (average complexity of their values)
+    if (isType(json, Object)) {
+      // `getComplexity` for Arrays will add 1 twice, so subtract 1 to compensate
+      //return getComplexity(Object.keys(json), d) + getComplexity(Object.values(json), d) - 1;
+      return getComplexity(Object.values(json));
+    }
+
+    throw new Error(`Couldn't get complexity of ${json}`);
+    
+  })();
+  
+};
+
+fs.readFile(process.argv[2], 'utf8', function(err, data) {
+  if (err) {
+      return console.log(err);
+  }
+
+  jsonFile = JSON.parse(data);
+  console.log(getComplexity(jsonFile));
+});
+
+\end{lstlisting}
+\section{System resource}\label{appendix:syste_resource_script}
+\begin{lstlisting}[caption=Python script to collect system resource usage by a process]
+import psutil
+from subprocess import DEVNULL, STDOUT
+from sys import argv
+from time import sleep
+
+import seaborn as sns
+from matplotlib import pyplot as plt
+
+def plot_and_save(x, y, path, title, ylabel):
+    graph = sns.lineplot(x=x, y=y)
+
+    graph.set(title=title)
+    graph.set(xlabel="Time (s)")
+    graph.set(ylabel=ylabel)
+    graph.get_figure().savefig(path)
+    plt.close(graph.get_figure())
+
+cmd = [command for command in argv[1:]]
+sleep_time = 5.0
+graph_path = "graphs"
+
+times = []
+t = 0.0
+cpu_percents = []
+ram_percents = []
+number_of_cpu = psutil.cpu_count()
+
+with psutil.Popen(cmd) as p:
+    print("Starting logging...")
+
+    while p.status() == psutil.STATUS_RUNNING or p.status() == psutil.STATUS_SLEEPING:
+        times.append(t)
+        t += sleep_time
+
+        cpu_percents.append(p.cpu_percent())
+        ram_percents.append(p.memory_percent())
+        #print(f"CPU: {p.cpu_percent()}%")
+        #print(f"RAM: {p.memory_percent()}%")
+        sleep(sleep_time)
+
+print("...finished")
+
+if len(cpu_percents) > 0 and len(ram_percents) > 0:
+    print(f"Data gathered: {len(times)}")
+    plot_and_save(times,
+                  [cpu_perc/number_of_cpu for cpu_perc in cpu_percents],
+                  f"{graph_path}/cpu.png",
+                  "CPU usage",
+                  "% of CPU")
+    plot_and_save(times,
+                  ram_percents,
+                  f"{graph_path}/ram.png",
+                  "RAM usage",
+                  "% of RAM")
+\end{lstlisting}
+
 \chapter{Configuration file}
 \section{Automaton configuration}\label{appendix:automaton_configuration_file}
 \begin{lstlisting}[caption=JSON configuration file for the automaton]

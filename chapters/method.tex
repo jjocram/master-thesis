@@ -4,13 +4,13 @@
 To fulfill the requirements of the project, I adopted an experimental approach. First and foremost, I was able to determine which tools would have been the most appropriate for doing the computer vision and machine learning tasks. Then, to experiment with the solution proposed, I designed and developed a proof of concept capable of recognizing and learning a user’s hand gestures and communicating to a robot which action to perform based on the gesture recognized. 
 \section{Choice of technologies and tools}\label{sec:technologies_and_tolls}
 \subsection{Python}
-Python is a high-level programming language. It is a well-known and highly supported programming language for machine learning tasks. Moreover, it is also supported by \acrshort{ROS} whose documentation has sections written for it. The version used for this project is 3.10 because the pattern matching offered through the \texttt{match ... case} statement is exploited.
+Python is a high-level programming language. It is a well-known and highly supported programming language for machine learning tasks. Moreover, it is also supported by \acrshort{ROS} whose documentation has sections written for it. The version used for this project is 3.8 because it is the version distributed within the latest release of Ubuntu operating system. However, being able to use the latest version would allow the exploitation of new statements, for example the pattern matching offered through the \texttt{match ... case} statement, that would make the implementation easier.
 
 \subsection{Tensorflow}
 Tensorflow is an open-source Python library to build \acrshort{ML} models. Google began developing it in 2015, and it is now one of the most widely-used Python libraries for performing \acrshort{ML} tasks. It offers a huge number of layers, activation functions, and tools to build simple and complex neural network architectures. The best-known counterpart is PyTorch. During my studies, I have had to use both, and I think Tensorflow is more suitable to develop neural networks oriented toward an application. Instead, PyTorch is more appropriate for the development of new and complex neural networks. Moreover, Tensorflow is better integrated with data collection tools like Tensorboard. 
 
 \subsubsection{Tensorflow lite}
-Tensorflow Lite is a component of Tensorflow that allows you to convert a Tensorflow model into a compressed flat buffer and then deploy it onto any device (e.g. mobile devices or embedded devices). To deploy the hand gesture recognizer to the Nvidia Jetson, the use of this tool is natural.
+Tensorflow Lite is a component of Tensorflow that allows you to convert a Tensorflow model into a compressed flat buffer and then deploy it onto any device (e.g. mobile devices or embedded devices). With the aim to deploy the hand gesture recognizer to an embedded device like the Nvidia Jetson or distribute it to other people, the use of this tool is natural.
 
 \subsubsection{Keras}
 Keras takes advantage of Tensorflow to give the user a powerful API to design and develop Deep Neural Networks. With a few lines of code, it is possible to implement complex neural networks that exploit the latest research in the field of  \gls{ML}.
@@ -28,10 +28,10 @@ MediaPipe is an open-source, real-time, and on-device tool that can track multip
     \label{fig:landmarksMediapipe}
 \end{figure}
 The precision of this tool is about $96\%$~\cite{paper:mediapipe}, so it is a good starting point for the hand gesture recognition task. It is possible to get the position of the landmarks and give them input through a Deep Neural Network trained on the gestures of our interest. \\
-The list of coordinates relatives at the 2.5D position of the hand's landmarks is returned by MediaPipe.These coordinates can be saved and used to train a deep neural network instead of images. This is interesting because: 
+The list of coordinates relatives at position of the hand's landmarks is returned by MediaPipe.These coordinates can be saved and used to train a deep neural network instead of images. This is interesting because: 
 \begin{itemize}
-    \item reduce the size of the dataset;
-    \item eliminate environmental factors such as background, lighting, and skin color;
+    \item it reduces the size of the dataset;
+    \item it eliminates environmental factors such as background, lighting, and skin color;
 \end{itemize}
 
 It is interesting to point out that MediaPipe is capable of tracking, in real-time, different parts of the human body, for example, the face and the whole body~\cite{site:mediapipe}.
@@ -43,23 +43,24 @@ OpenCV is an open-source library that fully meets the requirements regarding com
 The latest release, and the one used for this project, is \textit{ROS Galactic Geochelone}.
 
 \subsubsection{Navigation}
-``Nav 2'' is the navigation system provided by \gls{ROS}. A developer can choose to use their navigation system, but the one developed by ~\citeauthor{paper:navigation2} is widely tested and supported~\cite{paper:navigation2}. It uses a set of actions whose behaviour is described is section~\ref{p:exchange_message_with_actions} and provides complete set of API to control the robot. Specifically, those used were:
+``Nav 2'' is the navigation system provided by \gls{ROS}. A developer can choose to use their navigation system, but the one developed by ~\citeauthor{paper:navigation2} is widely tested and supported~\cite{paper:navigation2}. It uses a set of actions whose behaviour is described in section~\ref{p:exchange_message_with_actions} and provides a complete set of API to control the robot. Specifically, those used were:
 \begin{itemize}
     \item \texttt{setInitialPose}: to set the initial position of the robot;
     \item \texttt{goToPose}: to tell to the robot to reach a position;
     \item \texttt{isTaskComplete}: to know when the task is finished;
     \item \texttt{getFeedback}: to receive a feedback (i.e. the current position) from the robot.
 \end{itemize}
-A complete list of what this package is capable can be found on the Nav2 documentation: \href{https://github.com/ros-planning/navigation2/tree/main/nav2_simple_commander}{https://github.com/ros-planning/navigation2/tree/main/nav2\_simple\_commander}
+A complete list of what this package is capable can be found on the Nav2 documentation.\footnote{ \href{https://github.com/ros-planning/navigation2/tree/main/nav2_simple_commander}{https://github.com/ros-planning/navigation2/tree/main/nav2\_simple\_commander}}
 
 \subsection{Gazebo simulator}
-Gazebo is an open-source simulator for simulating environments involving robots. Gazebo offers the ability to accurately and efficiently simulate populations of robots in complex indoor and outdoor environments. Moreover, there is the possibility to use different robot models using \glsfirst{SDF}  files and import Collada files into the simulated world. Gazebo is also expandable with plugins. One of those lets you use \acrshort{ROS} to communicate with the robots inside the simulation. I used the Gazebo simulator to perform some tests before deploying the software in a real environment.  
+Gazebo is an open-source simulator for simulating environments involving robots. Gazebo offers the ability to accurately and efficiently simulate populations of robots in complex indoor and outdoor environments. Moreover, there is the possibility to use different robot models using \glsfirst{SDF}  files and import Collada files into the simulated world. Gazebo is also expandable with plugins. One of those lets you use \acrshort{ROS} to communicate with the robots inside the simulation. I used the Gazebo simulator to perform the communication tests between the hand gesture recognizer and the robot.  
 
 \subsection{Git}
 Git is a distributed version control system. It has been extensively used to store and share the source code and documentation for this project. In particular, GitHub has been used, creating several repositories.
 
 \section{System design and implementation}\label{sec:system_design_and_implementation}
 The hand gesture recognizer was based on ~\citeauthor{site:hand_gesture_base_repo}'s~\cite{site:hand_gesture_base_repo} project, to which several improvements (i.e., code refactoring to improve readability, code reuse, and reduction of opportunistic copy and paste) and new functionalities were added.
+
 \subsection{System capabilities and data flows}
 Before running the hand gesture detector, the user can choose which mode to run the program.:
 \begin{itemize}
@@ -87,7 +88,7 @@ Figure~\ref{fig:system_architecture_operational} shows the data flow in the oper
 \end{enumerate}
 
 \subsubsection{Learning mode}
-In this mode, the user can choose to add a new gesture or enhance an already existing one by adding more data to the dataset. In both cases, a command-line interface is used to interact with the user.
+In this mode, the user can choose to add a new gesture or enhance an already existing one by adding more data to the dataset. In both cases, a command-line interface is used to interact with the user and guide it through the process.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{thesis/images/systemArchitectureTraining.png}
@@ -100,11 +101,11 @@ Figure~\ref{fig:system_architecture_learning} shows the data flow in the learnin
     \item the frame is given as input to MediaPipe, which handles the hand tracking task and returns the list of landmarks if a hand is detected in the frame;
     \item if the user chooses to add a new static gesture or enhance an existing one, the landmarks in the frame are saved in the CSV file with the identifier number that refers to the label of the gesture. Otherwise, if the user chooses to add a new dynamic gesture or enhance an existing one, the landmarks in the frames along with those from the previous $N$ frames are saved in the CSV file with the identifier number that refers to the label of the gesture.
     \item the associated neural network has been trained;
-    \item the model is converted into a TFLite model.
+    \item the model is converted into a TFLite model, ready to be used by the recognizer.
 \end{enumerate}
 
 \subsubsection{Macro mode}
-This mode is similar to the operational but, instead of sending the command in real-time to a robot, the user can choose to save a sequence of them in a text file or ``execute'' a previously saved macro file, sending its content to a robot. 
+This mode is similar to the operational but, instead of sending the command in real-time to a robot, the user can choose to save a sequence of gestures in a text file or ``execute'' a previously saved macro file, sending its content to a robot. 
 \begin{figure}[H]
     \centering
 
@@ -123,7 +124,7 @@ This mode is similar to the operational but, instead of sending the command in r
     \caption{Data flows in macro mode.}
     \label{fig:macro_data_flows}
 \end{figure}
-Figure~\ref{fig:system_architecture_save_macro} shows the data flow when a user creates a new macro. The first part is the same as the operation mode explained in section~\ref{sss:operational_mode} but, instead of sending the command to the robot, it is saved in a text file. Figure~\ref{fig:system_architecture_run_macro} shows when a macro is run. The sequence of commands is read from the file created as described above. Then, the commands are given as input to the ``hand gesture controller'' which communicates with the robot as explained in section~\ref{sss:operational_mode}.
+Figure~\ref{fig:system_architecture_save_macro} shows the data flow when a user creates a new macro. The first part is the same as the operational mode explained in section~\ref{sss:operational_mode} but, instead of sending the command to the robot, it is saved in a text file. Figure~\ref{fig:system_architecture_run_macro} shows when a macro is run. The sequence of commands is read from the file created as described above. Then, the commands are given as input to the ``hand gesture controller'' which communicates with the robot as explained in section~\ref{sss:operational_mode}.
 
 \subsection{Hand gesture recognizer}
 The first challenge to solve was the design and implementation of the hand gesture recognizer. In particular, two types of hand gestures were considered: 
@@ -136,9 +137,9 @@ This diversity leads to two different neural networks to classify the hand gestu
 \subsubsection{Static hand gestures}
 The set of static hand gestures chosen is the \gls{ASL} (in figure~\ref{fig:asl}). \textit{J} \textit{Z} are excluded because they involve a movement. To discriminate between dynamic and static gestures, I decided to prioritize the dynamic ones because the user has to perform an action to activate them. Instead, with the static gestures, the hand does not move, and the recognizer will always return a possible prediction. Also, the numbers have been excluded. 
 
-\begin{figure}[H]
+\begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{thesis/images/asl.png}
+    \includegraphics[width=0.8\textwidth]{thesis/images/asl.png}
     \caption{\glsdesc{ASL}~\parencite{img:asl}}\label{fig:asl}
 \end{figure}
 
@@ -146,7 +147,7 @@ The set of static hand gestures chosen is the \gls{ASL} (in figure~\ref{fig:asl}
 From MediaPipe, the static hand gesture recognizer gets twenty-one landmarks per frame. These landmarks are shown in figure~\ref{fig:landmarksMediapipe}. The dataset is a CSV file where each line contains:
 \begin{itemize}
     \item the identifier of the static hand gesture. It refers to the line in the label’s file; 
-    \item 42 42 coordinates (i.e. X and Y) of the 21 landmarks are relative to the zeroth landmark (i.e. the wrist) and normalized. 
+    \item 42 coordinates (i.e. X and Y) of the 21 landmarks are relative to the zeroth landmark (i.e. the wrist) and normalized. 
 \end{itemize}
 
 \paragraph{Deep neural network}\label{p:static_hand_gesture_deep_neural_network}
@@ -169,7 +170,7 @@ Figure~\ref{fig:static_hand_gesture_model} presents the layers in the network:
 To train the network the script:
 \begin{enumerate}
     \item reads the dataset file;
-    \item if the user requests it, a random under-sampling is applied;;
+    \item if the user requests it, a random under-sampling is applied;
     \item divides the dataset into three non-overlapping subsets (train set, validation set, and evaluation set);
     \item builds and compiles the network with callbacks to save the model during training, to early stop the training if the loss function does not improve anymore, and log analytics for Tensorboard; 
     \item trains the network on the train set and validates it with the validation set, gathering accuracy, loss function value, and time spent;
@@ -226,16 +227,17 @@ The hand gesture controller is the component that takes as input the recognized 
     \label{fig:controller-class-diagram}
 \end{figure}
 
-The class \textit{BaseController} handles the communication between the hand gesture recognizer and the automaton that will communicate with the robot. The \textit{HandGestureController} implements the method \textit{consumer\_input} telling to the automaton to send the messages to the robot in contrast to the \textit{MacroController} that does not. Instead, it saves on a text file the sequence of gestures made by the operator with the purpose to use them in another moment.
+The class \textit{BaseController} handles the communication between the hand gesture recognizer and the automaton that will communicate with the robot. The \textit{HandGestureController} implements the method \textit{consumer\_input} telling to the automaton to send the messages to the robot in contrast to the \textit{MacroController} that does not. Instead, the \textit{MacroController} saves on a text file the sequence of gestures made by the operator with the purpose to use them in another moment.
 
-\subsubsection{Automaton}
+\subsubsection{Automaton}\label{sss:automaton_methodology}
 To ensure the correctness of the sequence of gestures, the user has to describe it as a finite-state automaton. The configuration file is a JSON file that requires the user to define:
 \begin{itemize}
+    \item the initial state;
     \item a list of transitions. Each transition is defined by:
     \begin{itemize}
         \item from which state it comes;
         \item to which state it is directed;
-        \item with which element of the alphabet it is triggered;
+        \item with which element of the alphabet ($\Sigma$) it is triggered;
         \item the action to perform when the transition is triggered. It can be:
         \begin{itemize}
             \item \textbf{null} when no action is performed;
@@ -243,15 +245,24 @@ To ensure the correctness of the sequence of gestures, the user has to describe 
             \item \textbf{send a message} specifying on which topic publish the message, its type, and the raw data to send.
         \end{itemize}
     \end{itemize}
-    \item the initial state.
 \end{itemize}
-To better interact with the robot, the coordinates and the raw data for the messages can be interpolated with the element of the alphabet that trigger the transition. An example of configuration file can be found in~\ref{appendix:automaton_configuration_file}.
+To better interact with the robot, the coordinates and the raw data for the messages can be interpolated with the element of the alphabet that trigger the transition. An example of configuration file can be found in~\ref{appendix:automaton_configuration_file}.\\
+
+Four seconds elapse between the input of two commands, if the first one does not involve any action. Otherwise, before to accept another input the controller waits for the action to end. This is made to allow the user to change the gesture they are doing. The amount of time is configurable but four seconds have been shown to be sufficient.\\
+
+There is not a common way to evaluate how much complex and understandable a JSON file is but, since it is a file that has to be written and read by an user, it is important to give an evaluation of it. The method adopted to calculate the complexity considers the depth and the type of fields per object: 
+\begin{itemize}
+    \item strings, numbers, and null values have a complexity of $1$;
+    \item arrays have a complexity equal to $1 + (average complexity of nested elements)$;
+    \item objects have complexity equal to the complexity of their elements.
+\end{itemize}
+The algorithm to compute the complexity has been implemented in JavaScript and it is showed in~\ref{appendix:complexity_algorithm}
 
 \subsection{Integration with ROS}
 The integration with \acrshort{ROS} is managed through two Python packages:
 \begin{itemize}
     \item \textbf{rclpy}: it comes with the installation of \acrshort{ROS} as described in the documentation and it handles the raw communication between the hand gesture controller and the robot;
-    \item \textbg{nav2}: package which implement the Nav2 navigation algorithm. It has been installed with pip after cloning the GitHub repository (\href{https://github.com/ros-planning/navigation2.git}{https://github.com/ros-planning/navigation2.git}) with the following command:\newline\texttt{pip3 install navigation2/nav2\_simple\_commander/}
+    \item \textbf{nav2}: package which implement the Nav2 navigation algorithm. It has been installed with pip after cloning the GitHub repository\footnote{\href{https://github.com/ros-planning/navigation2.git}{https://github.com/ros-planning/navigation2.git}} with the following command:\newline\texttt{pip3 install navigation2/nav2\_simple\_commander/}
 \end{itemize}
 First and foremost the \textit{rclpy} is initialized with the statement \texttt{rclpy.init()}. Then, the hand gesture controller can either publish a message to a topic or set a goal for navigation based on the triggered automaton transition.
 \begin{itemize}
@@ -265,7 +276,7 @@ First and foremost the \textit{rclpy} is initialized with the statement \texttt{
 \end{itemize}
 
 \subsection{User interface}
-When the user select a mode that involves the use of the camera a window appears showing to the user what the camera is watching, the number of FPS, the recognized gestures, and the selected mode. Moreover, it shows also the hand's landmarks (i.e. the black points), the joints between them, and the landmarks used for the history of key-points in green with a trail when the hand moves. Figure~\ref{fig:example_ui}, for example, shows the recognition of the gesture \texit{F} as static gesture and \textit{Static} as dynamic.
+When the user selects a mode that involves the use of the camera a window appears showing the user what the camera is watching, the number of FPS, the recognized gestures, and the selected mode. Moreover, it shows also the hand's landmarks (i.e. the black points), the joints between them, and the landmarks used for the history of key-points in green with a trail when the hand moves. Figure~\ref{fig:example_ui}, for example, shows the recognition of the gesture \textit{F} as static gesture and \textit{Static} as dynamic.
 
 \begin{figure}
     \centering
@@ -275,7 +286,7 @@ When the user select a mode that involves the use of the camera a window appears
 \end{figure}
 
 \section{Documentation}
-To make the system as understandable as possible a proper documentation has been written. To ensure its readiness \textit{MkDocs} has been used with the theme \textit{MkDocs Material} and \textit{Ligthgallery} to manage the images. Instead, to ensure its availability \textit{GitHub Pages} and \textit{GitHub Actions} have been used. In this way it is available for everyone at the link \href{https://jjocram.github.io/hand-gesture/}{https://jjocram.github.io/hand-gesture/}. The documentation explains how to:
+To make the system as understandable as possible a proper documentation has been written. To ensure its readiness \textit{MkDocs} has been used with the theme \textit{MkDocs Material} and \textit{Ligthgallery} to manage the images. Instead, to ensure its availability \textit{GitHub Pages} and \textit{GitHub Actions} have been used. In this way it is available for everyone.\footnote{\href{https://jjocram.github.io/hand-gesture/}{https://jjocram.github.io/hand-gesture/}} The documentation explains how to:
 \begin{itemize}
     \item Setup the environment;
     \item Run the simulation;
@@ -297,11 +308,12 @@ To make the system as understandable as possible a proper documentation has been
 To collect data from the hand gesture recognizer Tensorboard and Tensorflow metrics have been used. Tensorboard has been connected to the train scripts as the documentation explains. Moreover, the evaluation dataset, obtained from both the static hand gestures dataset and the dynamic hand gestures dataset has been exploited to evaluate the trained network on data it has never seen. The data gathered in this way are:
 \begin{itemize}
     \item accuracy;
-    \item latest loss function value.
+    \item latest loss function value;
+    \item time.
 \end{itemize}
 The time is taken exploiting Python's decorators. Before calling the \texttt{fit} method the time is taken and when the training is finished the time is taken again. The delta between the two times is the time spent for training.
 
-\subsection{System resource utilization}
-To collect data while the program is running I wrote a Python script that launch a process (i.e. the recognizer) and collect CPU and RAM usage over time.
+\subsection{System resource utilization}\label{ss:system_resource_utilization}
+To collect data while the program is running I wrote a Python script, showed in~\ref{appendix:syste_resource_script}, that launches a process (i.e. the recognizer), collects CPU and RAM usage over time and plots them.
 
 \end{document}

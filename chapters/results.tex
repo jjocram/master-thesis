@@ -46,7 +46,7 @@ Figure~\ref{fig:automata_for_commands} shows the transition diagram for the auto
 }
     \caption{Automaton diagram for commands.}\label{fig:automata_for_commands}
 \end{figure}
-To implement the automaton in figure~\ref{fig:automata_for_commands} the configuration file in~\ref{appendix:automaton_configuration_file} has been used.
+To implement the automaton in figure~\ref{fig:automata_for_commands} the configuration file in~\ref{appendix:automaton_configuration_file} has been used, and its complexity is $3.72$. The complexity has been computed with the method described in~\ref{sss:automaton_methodology}
 
 \section{Hand gesture recognizer}
 \subsection{Static hand gestures}
@@ -257,5 +257,38 @@ full\_dataset      & one\_finger      & feed\_forward         & 0.93            
 \end{figure}
 
 \section{Integration with ROS}
+\subsection{System resource usage}
+A test has been performed to collect data on the use of system resources, in particular CPU and RAM usage. I ran the simulator and the navigation tool. Then, I used the method described in section~\ref{ss:system_resource_utilizatio} to collect the usage of CPU and RAM of the program. I performed the following sequence of gesture:
+\begin{enumerate}
+    \item Go to;
+    \item B;
+    \item Pick up;
+    \item Go to;
+    \item C;
+    \item Drop down.
+\end{enumerate}
+The results are shown in figure~\ref{fig:system_resource_graphs}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{thesis/images/cpu.png}
+        \caption{CPU usage.}
+        \label{fig:cpu_usage}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{thesis/images/ram.png}
+        \caption{RAM usage.}
+        \label{fig:ram_usage}
+    \end{subfigure}
+    \caption{System resource utilization}
+    \label{fig:system_resource_graphs}
+\end{figure}
+
+\subsection{Execution time}
+As explained in~\ref{sss:automaton_methodology} the execution time between two actions is four seconds, at least. The execution time of the action is not related to the framework. Meanwhile, I performed some tests to find which is the minimal amount of time to wait before receiving the next command.
 
 \end{document}
