@@ -217,6 +217,11 @@ In the model presented in figure~\ref{fig:lstm_model_dynamic_hand_gestures}, the
 \paragraph{Training}
 The training is similar to the one presented in paragraph~\ref{p:static_hand_gesture_training}, with the addition of the possibility for the user to choose which model to use.
 
+\subsubsection{Early stopping}
+Early stopping is the method adopted to specify an arbitrarily high number of epochs. With this technique, the end of the training is triggered by the recorded variation of a specified metric. In other words, when a metric does not change (or changes just a little) for a specified number of epochs, then the training can be considered ended.\\
+
+This technique has been used in both static hand gesture training and dynamic hand gesture training. The metric monitored was the loss on the validation dataset, and the number of epochs to control was fifty.
+
 \subsection{Hand gesture controller}\label{ss:hand_gesture_controller}
 The hand gesture controller is the component that takes as input the recognized hand gestures and converts them into the correct command for the robot. To better have a modular system the hierarchy in figure~\ref{fig:controller-class-diagram} has been implemented.
 
@@ -253,10 +258,11 @@ Four seconds elapse between the input of two commands, if the first one does not
 There is not a common way to evaluate how much complex and understandable a JSON file is but, since it is a file that has to be written and read by an user, it is important to give an evaluation of it. The method adopted to calculate the complexity considers the depth and the type of fields per object: 
 \begin{itemize}
     \item strings, numbers, and null values have a complexity of $1$;
-    \item arrays have a complexity equal to $1 + (average complexity of nested elements)$;
-    \item objects have complexity equal to the complexity of their elements.
+    \item arrays have a complexity equal to $1 + (average\, complexity\, of\, nested\, elements)$;
+    \item objects have complexity equal to the complexity of their elements;
+    \item every nested elements have a weight $d$ that multiplies the complexity score. 
 \end{itemize}
-The algorithm to compute the complexity has been implemented in JavaScript and it is showed in~\ref{appendix:complexity_algorithm}
+The algorithm to compute the complexity has been implemented in JavaScript and it is showed in~\ref{appendix:complexity_algorithm}. 
 
 \subsection{Integration with ROS}
 The integration with \acrshort{ROS} is managed through two Python packages:
@@ -276,6 +282,20 @@ First and foremost the \textit{rclpy} is initialized with the statement \texttt{
 \end{itemize}
 
 \subsection{User interface}
+A command line interface is the first interface with which a user interacts. It asks a few questions about what the user wants to do. The user answers writing on the terminal. It is designed to guide the user in the execution of the possible tasks:
+\begin{itemize}
+    \item launch the operation mode;
+    \item launch the learning mode asking which dataset is to be edited and other gesture's data;
+    \item launch the macro mode asking if the user wants to execute an existing macro or to create a new one.
+\end{itemize}
+Figure~\ref{fig:flaw_chart_cli} show the complete flaw chart with all the possibilities for the user.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{thesis/images/Flaw chart CLI.png}
+    \caption{Flaw chart of the command line interface}
+    \label{fig:flaw_chart_cli}
+\end{figure}
+
 When the user selects a mode that involves the use of the camera a window appears showing the user what the camera is watching, the number of FPS, the recognized gestures, and the selected mode. Moreover, it shows also the hand's landmarks (i.e. the black points), the joints between them, and the landmarks used for the history of key-points in green with a trail when the hand moves. Figure~\ref{fig:example_ui}, for example, shows the recognition of the gesture \textit{F} as static gesture and \textit{Static} as dynamic.
 
 \begin{figure}

@@ -5,7 +5,7 @@
 To evaluate the system, first of all an automaton to describe the accepted user input has been designed. Then, several hyperparameters have been tried to train the neural networks that run the hand gesture recognizer.
 
 \subsection{Environment description}
-To train the networks a MacBook Pro 2019 with MacOS Montrey has been used. Instead, to test the integration with ROS the same machine has been used but with Ubuntu on a virtual machine because Ubuntu is better integrated with \acrshort{ROS} and Gazebo. Moreover, a seed has been set to Tensorflow and Pandas (used for the split of the dataset) to make the results reproducible.
+To train the networks a MacBook Pro 2019 with MacOS Montrey has been used. Instead, to test the integration with ROS the same machine has been used but with Ubuntu on a virtual machine with four physical core and $8GB$ of RAM. The virtual machine has been used because Ubuntu is better integrated with \acrshort{ROS} and Gazebo. Moreover, a seed has been set to Tensorflow and Pandas (used for the split of the dataset) to make the results reproducible.
 
 \subsection{Automaton}
 The system is composed of two components: a node that deals with  hand gesture recognition and a node representing the robot to be controlled. The tasks that the robot must perform are:
@@ -256,9 +256,51 @@ full\_dataset      & one\_finger      & feed\_forward         & 0.93            
 \label{fig:performances_dynamic_hand_gestures}
 \end{figure}
 
+\subsection{System resource usage}\label{ss:system_resource_usage_training}
+A test has been performed to collect data on the use of system resources, in particular CPU and RAM usage. I added one new static and one new dynamic gesture and then I used the method described in section~\ref{ss:system_resource_utilization} to collect the usage of CPU and RAM of the program during the training process. The training process has been executed on the host machine and not in the virtual machine. The figures~\ref{fig:system_resource_graphs_static_training} and~\ref{fig:system_resource_graphs_dynamic_training} show the results obtained.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{thesis/images/cpu_static_training.png}
+        \caption{CPU usage.}
+        \label{fig:cpu_usage_static_training}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{thesis/images/ram_static_training.png}
+        \caption{RAM usage.}
+        \label{fig:ram_usage_static_training}
+    \end{subfigure}
+    \caption{System resource utilization during the static gesture recognizer training}
+    \label{fig:system_resource_graphs_static_training}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{thesis/images/cpu_dynamic_training.png}
+        \caption{CPU usage.}
+        \label{fig:cpu_usage_dynamic_training}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{thesis/images/ram_dynamic_training.png}
+        \caption{RAM usage.}
+        \label{fig:ram_usage_dynamic_training}
+    \end{subfigure}
+    \caption{System resource utilization during the dynamic gesture recognizer training}
+    \label{fig:system_resource_graphs_dynamic_training}
+\end{figure}
+
 \section{Integration with ROS}
+The implementation of the framework allowed to test it with the Gazebo simulator. In particular it has been used to test it in a warehouse environment with Nav2 as navigation system. During the simulation some data has been gathered to prove the capabilities and the lightness of the framework.
 \subsection{System resource usage}
-A test has been performed to collect data on the use of system resources, in particular CPU and RAM usage. I ran the simulator and the navigation tool. Then, I used the method described in section~\ref{ss:system_resource_utilizatio} to collect the usage of CPU and RAM of the program. I performed the following sequence of gesture:
+As in~\ref{ss:system_resource_usage_training}, a tests has been performed to gather some data about the system resource usage during the execution of the program in \texttt{operational mode}. This test has been executed in the virtual machine. I ran the simulator and the navigation tool. Then, I used the method described in section~\ref{ss:system_resource_utilization} to collect the usage of CPU and RAM of the program. I performed the following sequence of gesture:
 \begin{enumerate}
     \item Go to;
     \item B;
@@ -273,14 +315,14 @@ The results are shown in figure~\ref{fig:system_resource_graphs}
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{thesis/images/cpu.png}
+        \includegraphics[width=\textwidth]{thesis/images/cpu_operational.png}
         \caption{CPU usage.}
         \label{fig:cpu_usage}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{thesis/images/ram.png}
+        \includegraphics[width=\textwidth]{thesis/images/ram_operational.png}
         \caption{RAM usage.}
         \label{fig:ram_usage}
     \end{subfigure}
@@ -289,6 +331,6 @@ The results are shown in figure~\ref{fig:system_resource_graphs}
 \end{figure}
 
 \subsection{Execution time}
-As explained in~\ref{sss:automaton_methodology} the execution time between two actions is four seconds, at least. The execution time of the action is not related to the framework. Meanwhile, I performed some tests to find which is the minimal amount of time to wait before receiving the next command.
+As explained in~\ref{sss:automaton_methodology} the execution time between two actions is four seconds, at least. The execution time of the action performed by the robot is not related to the framework. Meanwhile, I performed some tests to find which is the minimal amount of time to wait before receiving the next command and four seconds resulted to be the best choice. But, this amount of time is subjective so, it can be changed by the configuration.
 
 \end{document}
