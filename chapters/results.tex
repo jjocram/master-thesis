@@ -7,7 +7,7 @@ To evaluate the system, first of all an automaton to describe the accepted user 
 \subsection{Environment description}
 To train the networks a MacBook Pro 2019 with MacOS Montrey has been used. Instead, to test the integration with ROS the same machine has been used but with Ubuntu on a virtual machine with four physical core and $8GB$ of RAM. The virtual machine has been used because Ubuntu is better integrated with \acrshort{ROS} and Gazebo. Moreover, a seed has been set to Tensorflow and Pandas (used for the split of the dataset) to make the results reproducible.
 
-\subsection{Automaton}
+\subsection{Automaton}\label{ss:automaton_description}
 The system is composed of two components: a node that deals with  hand gesture recognition and a node representing the robot to be controlled. The tasks that the robot must perform are:
 \begin{itemize}
     \item Pick up a parcel;
@@ -298,13 +298,99 @@ A test has been performed to collect data on the use of system resources, in par
 \end{figure}
 
 \section{Integration with ROS}
-The implementation of the framework allowed to test it with the Gazebo simulator. In particular it has been used to test it in a warehouse environment with Nav2 as navigation system. During the simulation some data has been gathered to prove the capabilities and the lightness of the framework.
+The first results achieved by integrating the framework with \gls{ROS} have been about the communication between two nodes: the one representing the hand gestures recognizer and the \textit{TurtleSim}. \textit{TurtleSim} is a ``simulator'' provided by \gsl{ROS} which takes inspiration from the turtle programming languages, where you control a turtle by telling it to go forward, turn left, and turn right. The turtle has a pen attached to it that draws the path on the screen. Figure~\ref{fig:initial_turtlesim} shows what it looks like at the startup.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{thesis/images/initial_turtlesim.png}
+    \caption{TurtleSim}
+    \label{fig:initial_turtlesim}
+\end{figure}
+
+At this point in the implementation, the hand gesture recognizer creates a node and communicates with the \textit{TurtleSim} exchanging messages on two topics. The messages sent represented the direction and the velocity of the turtle. Four positions were defined, each of them linked to a static hand gesture (A, B, C, and D). Based on the gesture recognized, a sequence of messages were picked and sent to the turtle. These messages told the turtle how to reach the target position from its current position.
+
+\begin{figure}[H]
+     \centering
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{thesis/images/ARecognizedTurtleSim.png}
+         \caption{Recognition of the `A' gesture.}
+         \label{fig:A_gesture_recognition_turtlesim}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{thesis/images/TurtleStartMoving.png}
+         \caption{Turtle starts moving.}
+         \label{fig:turtle_start_turtle_sim}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{thesis/images/TurtleReachA.png}
+         \caption{Turtle reaches position `A'.}
+         \label{fig:turtle_reach_A_position.}
+     \end{subfigure}
+        \caption{Recognition of the `A' gesture and turtle movement toward position `A'.}
+        \label{fig:example_to_A_turtlesim}
+\end{figure}
+
+The next step has been testing the integration with the navigation system ``Nav2''. I translated the test made with the \textit{TurtleSim} in a Gazebo World. The map used was an empty map ((figure~\ref{fig:gazebo_empty_world})) to ensure that communication between the hand gesture recognizer and the navigation system is working properly. The test had been successful and the simulated robot moved into the correct position. Figure~\ref{fig:rviz_emptyworld} shows the RViz tool, which is integrated with the navigation system and shows the path the robot is following. RViz also gives some feedback and actions regarding the navigation status, as figure~\ref{fig:rviz_feedback} shows.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{thesis/images/emptyGazeboWorld.png}
+        \caption{Gazebo Empty World.}
+        \label{fig:gazebo_empty_world}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{thesis/images/RVizPathEmptyWorld.png}
+        \caption{RViz showing the path to position `A'.}
+        \label{fig:rviz_emptyworld}
+    \end{subfigure}
+    \caption{Test navigation system in a Gazebo Empty World.}
+    \label{fig:system_resource_graphs}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{thesis/images/feedbackRViz.png}
+    \caption{RViz detail - feedback and actions.}
+    \label{fig:rviz_feedback}
+\end{figure}
+
+The last test to carry on regarding the integration with \gls{ROS} was in a more real scenario. The small warehouse environment provided by amazon\footnote{\href{https://github.com/aws-robotics/aws-robomaker-small-warehouse-world}{https://github.com/aws-robotics/aws-robomaker-small-warehouse-world}} in figure~\ref{fig:small_warehouse_gazebo_world} has been chosen to test the framework's final implementation with the automaton described in~\ref{ss:automaton_description}. In the world, the \textit{TurtleBot v3} has been inserted, which executes commands given via hand gestures recognized by the framework.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{thesis/images/smallwarehouse.png}
+    \caption{AWS Robomaker's small warehouse Gazebo world}
+    \label{fig:small_warehouse_gazebo_world}
+\end{figure}
+
+When a complex world is used, RViz provides more interesting data. It displays the obstacles seen by the robot as well as the path computed by the ``Nav2'' algorithm to avoid them, for example. Figure~\ref{fig:rviz_smallwarehouse} shows the RViz's interface when the small warehouse world is loaded.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{thesis/images/rviz_smallwarehouse.png}
+    \caption{RViz's interface during simulation in the small warehouse world.}
+    \label{fig:rviz_smallwarehouse}
+\end{figure}
+
+
+The test carried on regarding the recognition of several sequences of gestures involving both dynamic and static hand gestures, the set of navigation goals, and the proper reception of some messages exchanged on a \gls{ROS}' topic. Moreover, with this whole environment set up, some data has been gathered during the simulation to prove the capabilities and lightness of the framework.
+
 \subsection{System resource usage}
 As in~\ref{ss:system_resource_usage_training}, a tests has been performed to gather some data about the system resource usage during the execution of the program in \texttt{operational mode}. This test has been executed in the virtual machine. I ran the simulator and the navigation tool. Then, I used the method described in section~\ref{ss:system_resource_utilization} to collect the usage of CPU and RAM of the program. I performed the following sequence of gesture:
 \begin{enumerate}
     \item Go to;
     \item B;
     \item Pick up;
+    \item D;
     \item Go to;
     \item C;
     \item Drop down.
@@ -326,7 +412,7 @@ The results are shown in figure~\ref{fig:system_resource_graphs}
         \caption{RAM usage.}
         \label{fig:ram_usage}
     \end{subfigure}
-    \caption{System resource utilization}
+    \caption{System resource utilization during the ``operational mode''}
     \label{fig:system_resource_graphs}
 \end{figure}
 

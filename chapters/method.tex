@@ -1,8 +1,20 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
 \chapter{Method}\label{cap:methods}
-To fulfill the requirements of the project, I adopted an experimental approach. First and foremost, I was able to determine which tools would have been the most appropriate for doing the computer vision and machine learning tasks. Then, to experiment with the solution proposed, I designed and developed a proof of concept capable of recognizing and learning a user’s hand gestures and communicating to a robot which action to perform based on the gesture recognized. 
+To fulfill the requirements of the project, I adopted an experimental approach. First and foremost, I analyzed the problem in order to understand which kind of problems I was supposed to solve. From that, I was able to determine which tools would have been the most appropriate for doing the computer vision and machine learning tasks and the integration with \gls{ROS}. Then, to experiment with the solution proposed, I designed and developed a proof of concept capable of recognizing and learning a user’s hand gestures and communicating to a robot which action to perform based on the gesture recognized.\\
+
+\section{Preliminary study}
+In analyzing the problem, the following sub-problems emerged to be solved:
+\begin{itemize}
+    \item a way to use a webcam;
+    \item a way to recognize hand gestures, both static and dynamic from the frames received from a webcam;
+    \item a way to teach to the system new gestures and connect them to new actions;
+    \item a way to convert the recognized gestures into commands for a robot using \gls{ROS} as message exchange system. In particular a way to exchange general purpose messages and set navigation goals;
+    \item a way to simulate the proposed solution in different environments.
+\end{itemize}
+
 \section{Choice of technologies and tools}\label{sec:technologies_and_tolls}
+To achieve goals described above, I decided to use specific technologies and tools available for everyone. The taken decisions have been made based on my knowledge of the technologies and on the necessity to use some specific tools to fulfill the requirements.
 \subsection{Python}
 Python is a high-level programming language. It is a well-known and highly supported programming language for machine learning tasks. Moreover, it is also supported by \acrshort{ROS} whose documentation has sections written for it. The version used for this project is 3.8 because it is the version distributed within the latest release of Ubuntu operating system. However, being able to use the latest version would allow the exploitation of new statements, for example the pattern matching offered through the \texttt{match ... case} statement, that would make the implementation easier.
 
@@ -62,7 +74,7 @@ Git is a distributed version control system. It has been extensively used to sto
 The hand gesture recognizer was based on ~\citeauthor{site:hand_gesture_base_repo}'s~\cite{site:hand_gesture_base_repo} project, to which several improvements (i.e., code refactoring to improve readability, code reuse, and reduction of opportunistic copy and paste) and new functionalities were added.
 
 \subsection{System capabilities and data flows}
-Before running the hand gesture detector, the user can choose which mode to run the program.:
+Before running the hand gesture detector, the user can choose which mode to run the program:
 \begin{itemize}
     \item \textbf{operational};
     \item \textbf{learning};
