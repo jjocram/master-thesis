@@ -10,9 +10,9 @@ To train the networks a MacBook Pro 2019 with MacOS Montrey has been used. Inste
 \subsection{Automaton}\label{ss:automaton_description}
 The system is composed of two components: a node that deals with  hand gesture recognition and a node representing the robot to be controlled. The tasks that the robot must perform are:
 \begin{itemize}
-    \item Pick up a parcel;
-    \item Drop down a parcel;
-    \item Go to a predetermined position.
+    \item pick up a parcel;
+    \item drop down a parcel;
+    \item go to a predetermined position.
 \end{itemize}
 A letter identified positions and parcels. In this way, the \glsfirst{ASL} is exploitable in order to simulate the identification of positions and parcels.\\
 Figure~\ref{fig:automata_for_commands} shows the transition diagram for the automaton designed to check the user input for these tasks. The alphabet is $\Sigma = \{[A-Z], go\_to, pick\_up, drop\_down\}$ and the states are:
@@ -61,7 +61,7 @@ The dataset is composed of $3707$ elements divided in $24$ labels. The labels ar
 \end{figure}
 
 \subsubsection{Tests}
-In table~\ref{tab:tests_static_hand_gestures} are listed the tests performed to find the best configuration to recognize static hand gestures. ``Not defined'' in the column of ``Number of elements per class'' means that the whole dataset, described in~\ref{ss:dataset_static_gestures}, has been used to train the network.
+In table~\ref{tab:tests_static_hand_gestures}  the tests performed to find the best configuration to recognize static hand gestures are listed. ``Not defined'' in the column of ``Number of elements per class'' means that the whole dataset, described in~\ref{ss:dataset_static_gestures}, has been used to train the network.
 \begin{table}[H]
 \begin{tabular}{|c|c|c|}
 \hline
@@ -167,7 +167,7 @@ Two datasets have been used:
 \end{figure}
 
 \subsubsection{Tests}
-In table~\ref{tab:tests_dynamic_hand_gestures} are listed the tests performed to find the best configuration to recognize dynamic hand gestures. ``Not defined'' in the column ``Number of elements per class'' means that the whole dataset (specified in column ``Dataset'') has been used.
+In table~\ref{tab:tests_dynamic_hand_gestures} the tests performed to find the best configuration to recognize dynamic hand gestures are listed. ``Not defined'' in the column ``Number of elements per class'' means that the whole dataset (specified in column ``Dataset'') has been used.
 \begin{table}[H]
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{|c|c|c|c|}
@@ -184,10 +184,11 @@ full\_dataset      & one\_finger      & feed\_forward         & Not defined     
 10\_samples        & one\_finger      & feed\_forward         & 10                                    \\ \hline
 \end{tabular}%
 }
-As for the static hand gesture recognizer, I focused on finding the minimum size of the dataset in order to obtain a good accuracy and a short training time.
 \caption{Training configurations for the dynamic hand gesture classifier.}
 \label{tab:tests_dynamic_hand_gestures}
 \end{table}
+
+As for the static hand gesture recognizer, I focused on finding the minimum size of the dataset in order to obtain a good accuracy and a short training time.
 
 \subsubsection{Results}
 The data gathered during the training are shown in table~\ref{tab:result_dynamic_hand_gestures} and has been plotted. The graphs are shown in figure~\ref{fig:results_graphs_dynamic_hand_gestures} and~\ref{fig:performances_dynamic_hand_gestures}.
@@ -256,7 +257,7 @@ full\_dataset      & one\_finger      & feed\_forward         & 0.93            
 \label{fig:performances_dynamic_hand_gestures}
 \end{figure}
 
-\subsection{System resource usage}\label{ss:system_resource_usage_training}
+\subsection{System resource usage during training}\label{ss:system_resource_usage_training}
 A test has been performed to collect data on the use of system resources, in particular CPU and RAM usage. I added one new static and one new dynamic gesture and then I used the method described in section~\ref{ss:system_resource_utilization} to collect the usage of CPU and RAM of the program during the training process. The training process has been executed on the host machine and not in the virtual machine. The figures~\ref{fig:system_resource_graphs_static_training} and~\ref{fig:system_resource_graphs_dynamic_training} show the results obtained.
 
 \begin{figure}[H]
@@ -298,7 +299,31 @@ A test has been performed to collect data on the use of system resources, in par
 \end{figure}
 
 \section{Integration with ROS}
-The first results achieved by integrating the framework with \gls{ROS} have been about the communication between two nodes: the one representing the hand gestures recognizer and the \textit{TurtleSim}. \textit{TurtleSim} is a ``simulator'' provided by \gsl{ROS} which takes inspiration from the turtle programming languages, where you control a turtle by telling it to go forward, turn left, and turn right. The turtle has a pen attached to it that draws the path on the screen. Figure~\ref{fig:initial_turtlesim} shows what it looks like at the startup.
+Three incremental tests have been performed to test the correct integration with \gls{ROS}:
+\begin{enumerate}
+    \item message exchange: the first test was about the exchange of different messages when different gestures were recognized;
+    \item navigation system: the next step was the correct integration with the navigation system ``Nav2'' in a simple environment;
+    \item complex scenario: the last test carried on was on a more real scenario, a robot in a warehouse doing different tasks.
+\end{enumerate}
+
+In these three tests the network topology was similar:
+\begin{itemize}
+    \item the framework creates a node to communicate with the rest of the network;
+    \item the simulated robot could be considerated like another node;
+    \item when the navigation system was integrated, it could be considered like another node.
+\end{itemize}
+
+The framework's node communicates with the other two nodes and, obviously, the navigation system's node communicates with the robot to tell it where it has to go. Figure~\ref{fig:ros_network_topology} shows the network topology implemented to carry on the tests.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{thesis/images/ros_network_topology.png}
+    \caption{ROS' network topology}
+    \label{fig:ros_network_topology}
+\end{figure}
+
+\subsection{Integration with ROS' topic}
+The first results achieved by integrating the framework with \gls{ROS} have been about the communication between two nodes: the one representing the hand gestures recognizer and the \textit{TurtleSim}. \textit{TurtleSim} is a ``simulator'' provided by \gls{ROS} which takes inspiration from the turtle programming languages, where you control a turtle by telling it to go forward, turn left, and turn right. The turtle has a pen attached to it that draws the path on the screen. Figure~\ref{fig:initial_turtlesim} shows what it looks like at the startup.
 
 \begin{figure}[H]
     \centering
@@ -335,7 +360,8 @@ At this point in the implementation, the hand gesture recognizer creates a node 
         \label{fig:example_to_A_turtlesim}
 \end{figure}
 
-The next step has been testing the integration with the navigation system ``Nav2''. I translated the test made with the \textit{TurtleSim} in a Gazebo World. The map used was an empty map ((figure~\ref{fig:gazebo_empty_world})) to ensure that communication between the hand gesture recognizer and the navigation system is working properly. The test had been successful and the simulated robot moved into the correct position. Figure~\ref{fig:rviz_emptyworld} shows the RViz tool, which is integrated with the navigation system and shows the path the robot is following. RViz also gives some feedback and actions regarding the navigation status, as figure~\ref{fig:rviz_feedback} shows.
+\subsection{Integration with the navigation system}
+The next step has been testing the integration with the navigation system ``Nav2''. I translated the test made with the \textit{TurtleSim} in a Gazebo World. The map used was an empty map (figure~\ref{fig:gazebo_empty_world}) to ensure that communication between the hand gesture recognizer and the navigation system is working properly. The test had been successful and the simulated robot moved into the correct position. Figure~\ref{fig:rviz_emptyworld} shows the RViz tool, which is integrated with the navigation system and shows the path the robot is following. RViz also gives some feedback and actions regarding the navigation status, as figure~\ref{fig:rviz_feedback} shows.
 
 \begin{figure}[H]
     \centering
@@ -353,7 +379,7 @@ The next step has been testing the integration with the navigation system ``Nav2
         \label{fig:rviz_emptyworld}
     \end{subfigure}
     \caption{Test navigation system in a Gazebo Empty World.}
-    \label{fig:system_resource_graphs}
+    \label{fig:navigation_empty_gazebo_world}
 \end{figure}
 
 \begin{figure}[H]
@@ -363,11 +389,13 @@ The next step has been testing the integration with the navigation system ``Nav2
     \label{fig:rviz_feedback}
 \end{figure}
 
-The last test to carry on regarding the integration with \gls{ROS} was in a more real scenario. The small warehouse environment provided by amazon\footnote{\href{https://github.com/aws-robotics/aws-robomaker-small-warehouse-world}{https://github.com/aws-robotics/aws-robomaker-small-warehouse-world}} in figure~\ref{fig:small_warehouse_gazebo_world} has been chosen to test the framework's final implementation with the automaton described in~\ref{ss:automaton_description}. In the world, the \textit{TurtleBot v3} has been inserted, which executes commands given via hand gestures recognized by the framework.
+\subsection{Test in a warehouse environment}
+
+The last test to carry on regarding the integration with \gls{ROS} was in a more real scenario. The small warehouse environment provided by amazon\footnote{\href{https://github.com/aws-robotics/aws-robomaker-small-warehouse-world}{https://github.com/aws-robotics/aws-robomaker-small-warehouse-world}}, shown in figure~\ref{fig:small_warehouse_gazebo_world}, has been chosen to test the framework's final implementation with the automaton described in~\ref{ss:automaton_description}. In the world, the \textit{TurtleBot v3} has been inserted, which executes commands given via hand gestures recognized by the framework.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{thesis/images/smallwarehouse.png}
+    \includegraphics[width=1\textwidth]{thesis/images/smallwarehouse.png}
     \caption{AWS Robomaker's small warehouse Gazebo world}
     \label{fig:small_warehouse_gazebo_world}
 \end{figure}
@@ -376,7 +404,7 @@ When a complex world is used, RViz provides more interesting data. It displays t
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{thesis/images/rviz_smallwarehouse.png}
+    \includegraphics[width=1\textwidth]{thesis/images/rviz_smallwarehouse.png}
     \caption{RViz's interface during simulation in the small warehouse world.}
     \label{fig:rviz_smallwarehouse}
 \end{figure}

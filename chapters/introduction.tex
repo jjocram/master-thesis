@@ -4,12 +4,12 @@
 
 \section{Background and motivation}
 Improving the way an operator can interact with a robot is a hard challenge in the field of \gls{HRI}. Nowadays, robots are everywhere, and the control of their movements and actions is usually done through a joystick or a dashboard in the case of very complicated tasks.\\
-The idea of using the operator's body to interact with a robot is not a new one, but it brings several challenges when trying to implement it. A possible solution would be to use computer vision and machine learning techniques. In recent years, the computational power of processors and the ability to deploy \acrfull{ML} models on cheaper and smaller devices have paved the way to interact with computers and robots in a way previously unfeasible.
+The idea of using the operator's body to interact with a robot is not a new one, but it brings several challenges when trying to implement it. A possible solution would be to use computer vision and \gls{ML} techniques. In recent years, the computational power of processors and the ability to deploy \gls{ML} models on cheaper and smaller devices have paved the way to interact with computers and robots in a way previously unfeasible.
 
 \section{Problem statement}
 The primary goal of this thesis is to design, implement, and test a framework for human-machine interaction capable of integrating machine vision and artificial intelligence capabilities into robotics operations. In addition, it has to be as dynamic as possible, in the sense that it must be able to adapt to several scenarios, facilitating the learning of new capabilities into robotic systems or autonomous worker units.\\
 
-The proposed solution exploits computer vision and deep learning techniques to detect a set of hand gestures in real time and convey to a robot the action to take in response to the gesture. In this way, the operator can use the expressive power of his/her hands and their immediacy to communicate with the robot. Furthermore, by implementing this concept as an interface using the \acrfull{ROS} framework, we will no longer have to worry about which robot we want to manage in the future; all that is required is that it receives specified messages in order to function. An example of the idea we want to implement is the one in~\ref{fig:systemArchitecture}. Moreover, making the system as modular as possible would allow other people to use it as a proper framework for other projects that want to integrate machine vision and/or artificial intelligence capabilities into robotic operations. Finally, great relevance must have how to facilitate the learning capability of the system to make it dynamic and can be adapted to various scenarios.
+The proposed solution exploits computer vision and deep learning techniques to detect a set of hand gestures in real time and convey to a robot the action to take in response to the gesture. In this way, the operator can use the expressive power of his/her hands and their immediacy to communicate with the robot. Furthermore, by implementing this concept as an interface using the \gls{ROS} framework, we will no longer have to worry about which robot we want to manage in the future; all that is required is that it receives specified messages in order to function. An example of the idea we want to implement is represented in figure~\ref{fig:systemArchitecture}. Moreover, making the system as modular as possible would allow other people to use it as a proper framework for other projects that want to integrate machine vision and/or artificial intelligence capabilities into robotic operations. Finally, great relevance must have how to facilitate the learning capability of the system to make it dynamic and able to adapt to various scenarios.
 
 \begin{figure}
   \centering
@@ -23,7 +23,7 @@ The technology was chosen to be tested in a warehouse scenario because, since 20
 As functional requirements, the system should:
 \begin{itemize}
     \item be able to recognize a set of hand gestures;
-    \item use the \acrshort{ROS} framework to communicate with a robot;
+    \item use the \gls{ROS} framework to communicate with a robot;
     \item pick up on new gestures from the user;
     \item create some \glsfirstplural{macro}, save them, and run them;
     \item enables the user to alter the robot's behavior in response to a gesture.
@@ -46,19 +46,19 @@ In the field of Human-Machine-Interface, there are many attempts to simplify the
 
 A more intuitive way to communicate with a robot is to use some kind of body gesture, mimicking the action that the robot must perform. There are two methods to recognize the gesture and many projects have been built on them~\cite{paper:design_and_evaluate_hand_gesture}:
 \begin{itemize}
-    \item Vision-based methods: use cameras to capture the reality. The images are analyzed using computer vision and deep learning techniques;
-    \item Sensor-based methods: use a third party device like a Wiimote~\cite{paper:guo2008exploring} or a wearable, for example a glove in case of the PowerGlove~\cite{paper:kessler1995evaluation}.
+    \item vision-based methods: use cameras to capture the reality. The images are analyzed using computer vision and deep learning techniques;
+    \item sensor-based methods: use a third party device like a Wiimote~\cite{paper:guo2008exploring} or a wearable, for example a glove in case of the PowerGlove~\cite{paper:kessler1995evaluation}.
 \end{itemize}
 
 There are several projects trying to integrate gesture recognition with the control of robots. A particularly interesting one is the one proposed by \citeauthor{paper:chen2019online} in the \citeyear{paper:chen2019online}.  They developed a system composed of three components: an online personal feature pre-training system; a gesture recognition system; and a task re-planning system for robot control~\cite{paper:chen2019online}. Also, searching on GitHub with the keywords ``\textit{robot control gesture}'' returns hundreds of projects, especially related to controlling robotic arms. And, more generally, the task of gesture recognition is a well studied task.\\
 
-It is worth noting that almost all projects are designed to work with a specific robot. The \gls{ROS} is not usually involved, leading to a more difficult integration with future hardware. Moreover, the dynamism of the solution is also not usually taken into account, resulting in a solution that can only be used in that context. In particular, learning a new gesture is usually a difficult task to accomplish.
+It is worth noting that almost all projects are designed to work with a specific robot. \gls{ROS} is not usually involved, leading to a more difficult integration with future hardware. Moreover, the dynamism of the solution is also not usually taken into account, resulting in a solution that can only be used in that context. In particular, learning a new gesture is usually a difficult task to accomplish.
 
 \section{Organization}\label{s:organization}
 This document is organized as follow:
 \begin{description}
-    \item[{\hyperref[cap:theory]{Chapter two}}] describes the background I obtained studying the literature about \acrlong{HRI}, hand gestures recognition and, \glsfirst{ROS}.
-    \item[{\hyperref[cap:methods]{Chapter three}}] describes the technologies and tools used to implement the solution proposed and why they have been chosen to fulfill the requirements. Moreover, the the design process that led to the solution proposed is described. In particular, it is focused on the implementation of the system composed by the hand gesture recognizer and a robot employed in a warehouse (i.e. a storage and retrieval robot).
+    \item[{\hyperref[cap:theory]{Chapter two}}] describes the background I obtained studying the literature about \gls{HRI}, hand gestures recognition and, \gls{ROS}.
+    \item[{\hyperref[cap:methods]{Chapter three}}] describes the technologies and tools used to implement the solution proposed and why they have been chosen to fulfill the requirements. Moreover, the design process that led to the solution proposed is described. In particular, it is focused on the implementation of the system composed by the hand gesture recognizer and a robot employed in a warehouse (i.e. a storage and retrieval robot).
     \item[{\hyperref[cap:results]{Chapter four}}] presents the results obtained performing several tests with the system developed.
     \item[{\hyperref[cap:discussion]{Chapter five}}] presents a discussion on the results presented in chapter four, explaining them and confronting with other solutions.
     \item[{\hyperref[cap:conclusion]{Chapter six}}] presents my conclusions on the work done for this internship. 

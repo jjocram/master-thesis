@@ -1,12 +1,12 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
-\chapter{State of the art}\label{cap:theory}
+\chapter{State of the Art}\label{cap:theory}
 
 \section{Human-Robot Interaction}
 At present, there are several ways to interact with a robot. The best way to do it, generally, depends on the type of robot and the task it has to perform. It is possible to compare two ways for a human to interact with a robot:
 \begin{itemize}
-    \item Controlling the robot with a third-party device that acts as a controller, such as a joystick or a computer with a user interface;
-    \item Using his or her own body, specifically hand gestures, voice, or body position.
+    \item controlling the robot with a third-party device that acts as a controller, such as a joystick or a computer with a user interface;
+    \item using operator's body, specifically hand gestures, voice, or body position.
 \end{itemize}
 \subsection{Using a third party device}
 The earliest ways of interacting with a robot involve the use of a controller that the operator must use to tell the robot what actions to perform. In this case, the controller could be a joystick or a computer program. In the last case, the study of \acrfull{HCI} must be considered. Using a third-party device to control a robot is not the easiest way, especially when the tasks to be completed are intricate and the robot’s movements are as complicated as the tasks.
@@ -37,7 +37,7 @@ A neural network is a collection of connected neurons. In biology, a neuron is a
     \label{fig:neuron}
 \end{figure}
 
-An artificial neural network is usually organized into layers, as opposed to biological ones, which are much more complex.  Figure~\ref{fig:neural_network_example} represents a deep neural network, deep because there are one or more hidden layers. Different kinds of layers exist. The one shown in figure~\ref{fig:neural_network_example}, other than input and output, is a dense layer. In this kind of layer, every output of the previous layer is received as input by each neuron of the layer considered for the reasoning. Regarding the output layer, each neuron returns a probability that the input belongs to a class. When there is only one output neuron the probability is $p$ to belong to the class and $1-p$ to not belong to the class. When there is more than one neuron, each of them returns the probability of belonging to a class, and the highest one is taken as the prediction. A prediction, to be considered correct, must overcome a threshold value. In general, more are the hidden layer, more the network will be accurate but, more time will take to learn. 
+An artificial neural network is usually organized into layers, as opposed to biological ones, which are much more complex.  Figure~\ref{fig:neural_network_example} represents a deep neural network, deep because there are one or more hidden layers. Different kinds of layers exist. The one shown in figure~\ref{fig:neural_network_example}, other than input and output, is dense layer. In this kind of layer, every output of the previous layer is received as input by each neuron of the layer considered for the reasoning. Regarding the output layer, each neuron returns a probability that the input belongs to a class. When there is only one output neuron the probability is $p$ to belong to the class and $1-p$ to not belong to the class. When there is more than one neuron, each of them returns the probability of belonging to a class, and the highest one is taken as the prediction. A prediction, to be considered correct, must overcome a threshold value. In general, more are the hidden layer, more the network will be accurate but, more time will take to learn. 
 
 \begin{figure}[H]
     \centering
@@ -53,7 +53,7 @@ When \acrshort{ML} is involved, one of the challenges is the need for large data
 The goal of training a neural network is to find the best weights for each neuron’s inputs. The technique for a multi-layer neural network is stochastic gradient descent with back propagation and data is essential to training a neural network. To correctly train and evaluate a neural network, three datasets are requested. Usually, one dataset is randomly divided into three non-overlapping partitions. The first and biggest part of the dataset is used to train the network. In more detail, it is used to adjust the weights of inputs. Then, another part of the dataset is picked as validation during the training process, and the last part is taken to evaluate the trained model at the end.
 
 \subsubsection{Evaluation}
-To evaluate an ML model, it is necessary to collect some data during the training process. The metrics to keep track of are: 
+To evaluate an \gls{ML} model, it is necessary to collect some data during the training process. The metrics to keep track of are: 
 \begin{itemize}
     \item \textbf{loss function}: the network's goal is to minimize the loss function. Generally, it represents the prediction error with respect to the ground truth;
     \item \textbf{accuracy} is defined as the ratio of correct predictions to total predictions made.
@@ -67,15 +67,15 @@ The best neural network is the one that guarantees the best trade-off between th
 \subsubsection{State of the art}
 With the help of neural networks, there are several ways to achieve good results in the hand gesture recognition task. The results presented in~\citeauthor{paper:survey_on_vision_based_hand_gesture_recognition}~\cite{paper:survey_on_vision_based_hand_gesture_recognition} shows that with a \acrfull{CNN}, it is possible to achieve an accuracy higher than  $90\%$. \acrshortpl{CNN} are classifier-based systems that can process input images as structured arrays of data and identify patterns between them. To date, there are two main types of object detection algorithms in the field of deep learning: 
 \begin{itemize}
-    \item \textbf{Classification-based algorithms}: firstly, they select a group of \acrfullpl{ROI} in the images where the chances that an object is present are high; secondly, they apply \acrshort{CNN} techniques to these selected regions to detect the presence of an object. A problem associated with these types of algorithms is that they need to execute a detector in each \acrshort{ROI}, and this makes the process of object detection very slow and highly expensive in terms of computation.
-    \item \textbf{Regression-based algorithms}: these types of algorithms are faster than the above algorithms, in that there is no selection of the \acrshort{ROI} so that the bounding boxes and the labels are predicted for the whole image at once; they can identify and classify objects within the image at once. Beyond the higher speed, a key point is that the predictions are informed by the global context in the image, thus they generally lead to higher accuracies.
+    \item \textbf{classification-based algorithms}: firstly, they select a group of \acrfullpl{ROI} in the images where the chances that an object is present are high; secondly, they apply \acrshort{CNN} techniques to these selected regions to detect the presence of an object. A problem associated with these types of algorithms is that they need to execute a detector in each \acrshort{ROI}, and this makes the process of object detection very slow and highly expensive in terms of computation.
+    \item \textbf{regression-based algorithms}: these types of algorithms are faster than the above algorithms, in that there is no selection of the \acrshort{ROI} so that the bounding boxes and the labels are predicted for the whole image at once; they can identify and classify objects within the image at once. Beyond the higher speed, a key point is that the predictions are informed by the global context in the image, thus they generally lead to higher accuracies.
 \end{itemize}
 One of the most famous regression-based algorithms is \glsfirst{YOLO}, but it is not the only possible solution to perform this kind of task. Another technique that gives promising results is the combination of the MediaPipe hand tracker, which section~\ref{sec:mediapipe} describes, and a feed-forward neural network to recognize the gesture.\\ All these kinds of solutions suit well in the case of static hand gestures. As  \citeauthor{site:hand_gesture_base_repo} shows in his repository\cite{site:hand_gesture_base_repo}, working with a history of landmarks is possible. For this kind of task, a \glsfirst{LSTM} neural network is a good starting point. This kind of network tries to add the knowledge of past events to the computation. To do so, there are loops inside them that allow information to persist~\cite{site:understanding_lstm_networks}.
 
 \section{Robot Operating System (ROS)}
 \acrshort{ROS} was born as a framework to design robot software. Its initial presentation was in \citeyear{paper:ros} by \citeauthor{paper:ros}~\cite{paper:ros}. In particular it tries to solve the problem of communication but, it has also many other characteristics that make it a good framework for robot development.
 \subsection{Communication}
-A system based on \acrshort{ROS} has a \textit{peer-to-peer} topology. Each node of the network can communicate with any other node. The first version of \acrshort{ROS} implemented a custom communication layer but, from the second version onwards, it implements the \glsfirst{DDS} protocol.
+A system based on \acrshort{ROS} has a \textit{peer-to-peer} topology. Each node of the network can communicate with any other node. The first version of \acrshort{ROS} implemented a custom communication layer but, from the second version onwards, it implements the \gls{DDS} protocol.
 \subsubsection{Data Distribution Service (DDS)}
 \gls{ROS} uses \gls{DDS} as an end-to-end middleware to exchange messages: The adoption of the \gls{DDS} is one of the main differences between \gls{ROS} version 1 and \gls{ROS} version 2. The \gls{DDS} was chosen by the \gls{ROS} maintainer for its reliability and flexibility in mission-critical systems, such as:
 \begin{itemize}
@@ -113,12 +113,12 @@ and many others.
 \subsection{Nomenclature}
 The key points to understand when using \acrshort{ROS} are related to the ``ROS 2 Graph'', and they are:
 \begin{itemize}
-    \item \textbf{Node}: a system component in charge of a specific task. It is an executable, in my case, a Python executable, but it could also be a C++ executable, and it can communicate with other nodes, exchanging messages. A robotic system is composed of multiple nodes; 
-    \item \textbf{Message}: the method by which nodes exchange data. Each message has its own ``type'', and this brings advantages in building an interchangeable system because it is possible to change the components of the system with others that can understand the same messages. Messages, in this case, can be seen as interfaces for programming languages. There are three ways for nodes to exchange messages: 
+    \item \textbf{node}: a system component in charge of a specific task. It is an executable; for example a Python executable or also a C++ executable, and it can communicate with other nodes, exchanging messages. A robotic system is composed of multiple nodes; 
+    \item \textbf{message}: the method by which nodes exchange data. Each message has its own ``type'', and this brings advantages in building an interchangeable system because it is possible to change the components of the system with others that can understand the same messages. Messages, in this case, can be seen as interfaces for programming languages. There are three ways for nodes to exchange messages: 
         \begin{itemize}
-            \item \textbf{Topic};
-            \item \textbf{Service};
-            \item \textbf{Action}.
+            \item \textbf{topic};
+            \item \textbf{service};
+            \item \textbf{action}.
         \end{itemize}
 \end{itemize}
 
@@ -144,7 +144,7 @@ It is based on a call-response model. In this case, a node requests some data fr
 \paragraph{Action}\label{p:exchange_message_with_actions}
 It uses both topics and services. The functionality is similar to service with the addition of a constant stream of updates from the ``server'' through a topic to which the ``client'' subscribes. The sequence of actions is the following: 
     \begin{enumerate}
-        \item A node (i.e.\ the client) sends a message (the request for a goal) through a service to another node  (i.e.\ the server). The latter replies with one message through the service. For example, it can reply with an acknowledgment or a message saying it has started working on a task; 
+        \item A node (i.e.\ the client) sends a message (the request for a goal) through a service to another node  (i.e.\ the server). The latter replies with one message through the service. For example, it can reply with an acknowledgment or a message saying it has started working on the task; 
         \item The server keeps the client updated with the progress of the task through a topic; 
         \item The client sends a request through another service to the server. When the task is finished, the server will reply to the client. 
     \end{enumerate}
