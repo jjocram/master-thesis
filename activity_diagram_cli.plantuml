@@ -1,0 +1,38 @@
+@startuml
+start
+:Mode selection;
+switch (mode)
+case (mode = 0)
+  :Launch webcam view,
+  initialize ML models,
+  and ROS;
+  stop
+case (mode = 1)
+  :Dataset selection;
+  :New gesture or enhance and old one;
+  if (New gesture?) then (yes)
+    :Input gesture label;
+    : Write new gesture data on file;
+  else (no)
+    :Input gesture id;
+  endif
+  :Launch webcam view, 
+  initilize ML models,
+  and get readyt to write 
+  gesture's coordinates;
+  stop
+case (mode = 2)
+  :Create or run macro selection;
+  if (Create macro) then (yes)
+    :Input macro name;
+    :Launch webcamview,
+    intitialize ML models,
+    and get ready to write 
+    macro sequence;
+    stop
+  else (no)
+    :Input macro file path;
+    :Initialize ROS and read macro file;
+    stop
+  endif
+@enduml

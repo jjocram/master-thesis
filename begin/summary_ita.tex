@@ -1,0 +1,26 @@
+\documentclass[../thesis.tex]{subfiles}
+\begin{document}
+    \chapter*{Sommario}
+    \addcontentsline{toc}{chapter}{Sommario}  
+Questa tesi descrive il lavoro svolto durante il mio tirocinio presso l'Universit\`a di Agder, in Norvegia all'interno del programma Erasmus+ per Tirocini. Il lavoro è stato svolto sotto la supervisione della Prof.ssa Nadia S. Noori e del Prof. Tim A. Majchrzak.
+
+Quanto fatto \`e un lavoro di ricerca nell'ambito dell'Human-Robot-Interaction. 
+
+L'idea nasce dalla necessit\`a di trovare un modo per semplificare l'interazione tra un umano e un robot in diversi scenari utilizzando tecniche di computer vision e machine learning. 
+
+Esistono diverse soluzioni che implementano reti neurali per riconoscere le intenzioni di un utente, quello che differisce nel mio caso \`e l'utilizzo di ROS come sistema di comunicazione tra le componenti in modo da rendere la soluzione proposta il meno legata possibile all'hardware con la quale interagisce. 
+
+Durante il periodo di tirocinio, ho studiato la letterature riguardante la Human-Robot-Interaction e del riconoscimento dei gesti delle mani utilizzando tecniche di computer vision e machine learning. Ho inoltre studiato come funziona ROS in modo da poterlo integrare nella soluzione poi proposta.
+
+Ho quindi realizzato un proof-of-concept di quello che \`e possibile fare per integrare componenti di intelligenza artificiale all'interno di applicazioni robotiche e pronto per poi essere esteso in sviluppi futuri. 
+
+Il prodotto realizzato \`e composto da due componenti principali la prima \`e un classificatore di gesti per le mani che opera in real-time utilizzando una webcam come fonte video. Per fare ci\`o ho utilizzato alcune delle librerie pi\`u famose nell'ambito del deep learning e della computer vision. Per quanto riguarda la seconda componente, questa si occupa di interagire con ROS permettendo di legare sequenze di gesti ad azioni compiute da un robot. In particolare l'integrazione raggiunta permette di inviare messaggi ad un altro nodo della rete e impostare una posizione da raggiungere. La sequenza di gesti viene specificata dall'utente attraverso la descrizione di un automa a stati finiti (DFA) che si assicura di non poter accettare input non attesi.
+
+Durante il lavoro sono emerse alcune caratteristiche interessanti della soluzione che si stava realizzando come la possibilit\`a di insegnare nuove \textit{gesture} con relativa semplicit\`a da parte di un utente e la possibilit\`a di salvare sequenze di \textit{gesture} per poterle eseguire in un secondo momento pi\`u rapidamente e con maggior certezza. 
+
+Inoltre, per poter provare quanto realizzato il simulatore Gazebo \`e stato utilizzato per simulare diversi ambienti; in particolare l'ambiente nel quale mi sono maggiormente concentrato \`e quello di un magazzino. Ho quindi insegnato alla rete neurale a riconoscere l'alfabeto dei segni e altre \textit{gesture} per poter eseguire alcuni compiti, per esempio: raggiungi un punto della mappa, raccogli un pacco e posalo in un'altra posizione.
+
+La bont\`a della soluzione proposta \`e sostenuta da una serie di test che mi hanno permesso di raccogliere varie metriche. I dati raccolti sono stati poi analizzati e confrontati con quelli presenti nella letteratura per problemi simili.
+
+Infine, ho fatto un analisi critica del lavoro svolto individuando quali sono le sue limitazione e le sfide da superare per poterlo migliorare.
+\end{document}

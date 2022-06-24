@@ -1,4 +1,4 @@
-\documentclass[12pt, a4paper, twoside, openright, english]{report}
+\documentclass[12pt, a4paper, twoside, openright, english]{book}
 \usepackage[english]{babel}
 \usepackage{float}
 \usepackage[T1]{fontenc}
@@ -44,13 +44,16 @@
 
 \begin{document}
 
+\frontmatter
 \subfile{begin/title_page}
 \subfile{begin/dedication}
 \subfile{begin/abstract}
 \subfile{begin/thanks}
+\subfile{begin/summary_ita}
 \subfile{begin/table_of_contents}
 \cleardoublepage
 
+\mainmatter
 \subfile{chapters/introduction}
 \subfile{chapters/theory}
 \subfile{chapters/method}
