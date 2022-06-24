@@ -2,7 +2,7 @@
 \begin{document}
 \chapter{Results}\label{cap:results}
 \section{Configuration}
-To evaluate the system, first of all an automaton to describe the accepted user input has been designed. Then, several hyperparameters have been tried to train the neural networks that run the hand gesture recognizer.
+To evaluate the system, first of all an automaton to describe the accepted users input has been designed. Then, several hyperparameters have been tried to train the neural networks that run the hand gesture recognizer.
 
 \subsection{Environment description}
 To train the networks a MacBook Pro 2019 with MacOS Montrey has been used. Instead, to test the integration with ROS the same machine has been used but with Ubuntu on a virtual machine with four physical core and $8GB$ of RAM. The virtual machine has been used because Ubuntu is better integrated with \acrshort{ROS} and Gazebo. Moreover, a seed has been set to Tensorflow and Pandas (used for the split of the dataset) to make the results reproducible.
@@ -15,7 +15,7 @@ The system is composed of two components: a node that deals with  hand gesture r
     \item go to a predetermined position.
 \end{itemize}
 A letter identified positions and parcels. In this way, the \glsfirst{ASL} is exploitable in order to simulate the identification of positions and parcels.\\
-Figure~\ref{fig:automata_for_commands} shows the transition diagram for the automaton designed to check the user input for these tasks. The alphabet is $\Sigma = \{[A-Z], go\_to, pick\_up, drop\_down\}$ and the states are:
+Figure~\ref{fig:automata_for_commands} shows the transition diagram for the automaton designed to check the users input for these tasks. The alphabet is $\Sigma = \{[A-Z], go\_to, pick\_up, drop\_down\}$ and the states are:
 \begin{itemize}
     \item \textbf{$q_0$}: robot without parcel; 
     \item \textbf{$q_1$}: robot waiting for parcel id; 
