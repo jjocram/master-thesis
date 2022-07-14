@@ -30,7 +30,7 @@ As functional requirements, the system should:
 \end{itemize}
 Meanwhile, during the implementation of the solution proposed, it is important to keep in mind that the framework should be usable by people with very low programming skills, so, as a non-functional requirement, all the possible configurations should be easy to read and write.\\
 
-To fulfill all of these requirements, I combed the literature for information on the state of the art of the \acrshort{HRI}, its evaluation methods, and the best way to perform a hand gesture recognition task.\\
+To fulfill all of these requirements, I combed the literature for information on the state of the art of the \acrshort{HRI}, its evaluation methods, and the best way to perform a hand gesture recognition task. In addition, I studied \gls{ROS} to integrate it in the proposed solution.\\
 
 To summarize, this thesis is going to answer to the following questions:
 \begin{itemize}
@@ -46,8 +46,8 @@ In the field of Human-Machine-Interface, there are many attempts to simplify the
 
 A more intuitive way to communicate with a robot is to use some kind of body gesture, mimicking the action that the robot must perform. There are two methods to recognize the gesture and many projects have been built on them~\cite{paper:design_and_evaluate_hand_gesture}:
 \begin{itemize}
-    \item vision-based methods: use cameras to capture the reality. The images are analyzed using computer vision and deep learning techniques;
-    \item sensor-based methods: use a third party device like a Wiimote~\cite{paper:guo2008exploring} or a wearable, for example a glove in case of the PowerGlove~\cite{paper:kessler1995evaluation}.
+    \item \textbf{vision-based} methods: use cameras to capture the reality. The images are analyzed using computer vision and deep learning techniques;
+    \item \textbf{sensor-based} methods: use a third party device like a Wiimote~\cite{paper:guo2008exploring} or a wearable, for example a glove in case of the PowerGlove~\cite{paper:kessler1995evaluation}.
 \end{itemize}
 
 There are several projects trying to integrate gesture recognition with the control of robots. A particularly interesting one is the one proposed by \citeauthor{paper:chen2019online} in the \citeyear{paper:chen2019online}.  They developed a system composed of three components: an online personal feature pre-training system; a gesture recognition system; and a task re-planning system for robot control~\cite{paper:chen2019online}. Also, searching on GitHub with the keywords ``\textit{robot control gesture}'' returns hundreds of projects, especially related to controlling robotic arms. More generally, the task of gesture recognition is a well studied task.\\

@@ -1,7 +1,7 @@
 \documentclass[../thesis.tex]{subfiles}
 \begin{document}
 \chapter{Method}\label{cap:methods}
-To fulfill the requirements of the project, I adopted an experimental approach. First and foremost, I analyzed the problem in order to understand which kind of sub-problems I was supposed to solve. From that, I was able to determine which tools would have been the most appropriate for doing the computer vision and machine learning tasks and the integration with \gls{ROS}. Then, to experiment with the solution proposed, I designed and developed a proof of concept capable of recognizing and learning a users’ hand gestures and communicating to a robot which action to perform based on the gesture recognized.
+To fulfill the requirements of the project, I adopted an experimental approach. First and foremost, I analyzed the problem in order to understand which kind of sub-problems I was supposed to solve. From that, I was able to determine which tools would have been the most appropriate for doing the computer vision and machine learning tasks and the integration with \gls{ROS}. Then, to experiment with the solution proposed, I designed and developed a proof of concept capable of recognizing and learning hand gestures made by users and communicating to a robot which action to perform based on the gesture recognized.
 
 \section{Preliminary study}
 In analyzing the problem, the following sub-problems emerged to be solved:
@@ -25,7 +25,7 @@ Tensorflow is an open-source Python library to build \acrshort{ML} models. Googl
 Tensorflow Lite is a component of Tensorflow that allows you to convert a Tensorflow model into a compressed flat buffer and then deploy it onto any device (e.g. mobile devices or embedded devices). With the aim to deploy the hand gesture recognizer to an embedded device like the Nvidia Jetson or distribute it to other people, the use of this tool is natural.
 
 \subsubsection{Keras}
-Keras takes advantage of Tensorflow to give the users a powerful API to design and develop Deep Neural Networks. With a few lines of code, it is possible to implement complex neural networks that exploit the latest research in the field of  \gls{ML}.
+Keras takes advantage of Tensorflow to give the users a powerful API to design and develop deep neural networks. With a few lines of code, it is possible to implement complex neural networks that exploit the latest research in the field of  \gls{ML}.
 
 \subsection{MediaPipe}\label{sec:mediapipe}
 MediaPipe is an open-source, real-time, and on-device tool that can track multiple parts of the body. In particular, I am interested in hand tracking. MediaPipe suits very well for this purpose because it offers a pre-trained \acrshort{ML} model to recognize and track twenty-one landmarks on each hand (figure~\ref{fig:landmarksMediapipe}). In particular, it uses a pipeline composed of two \acrshort{ML} models:
@@ -36,7 +36,7 @@ MediaPipe is an open-source, real-time, and on-device tool that can track multip
 \begin{figure}[H]
     \centering
     \includegraphics[width=\columnwidth]{thesis/images/mediapipeHandLandmarks.png}
-    \caption{Landmarks on a hand recognized by MediaPipe~\cite{site:mediapipe}}
+    \caption{Landmarks on a hand recognized by MediaPipe~\cite{site:mediapipe}.}
     \label{fig:landmarksMediapipe}
 \end{figure}
 The precision of this tool is about $96\%$~\cite{paper:mediapipe}, so it is a good starting point for the hand gesture recognition task. It is possible to get the position of the landmarks and give them input through a deep neural network trained on the gestures of our interest. \\
@@ -52,10 +52,10 @@ It is interesting to point out that MediaPipe is capable of tracking, in real-ti
 OpenCV is an open-source library that fully meets the requirements regarding computer vision and works well with MediaPipe. It is also distributed as a Python package to integrate into users' applications. 
 
 \subsection{Robot Operating System}
-The use of \gls{ROS} is a requirement for the project. There are several releases of it. \textit{ROS Galactic Geochelone} is the chosen one because it was the latest. It has been released in January 2022.
+The use of \gls{ROS} is a requirement for the project. There are several releases of it. \textit{ROS Galactic Geochelone} is the chosen one because it was the latest at the moment the development started. It has been released in January 2022.
 
 \subsubsection{Navigation}
-``Nav2'' is the navigation system provided by \gls{ROS}. A developer can choose to use their navigation system, but the one developed by~\citeauthor{paper:navigation2} is widely tested and supported~\cite{paper:navigation2}. It uses a set of actions whose behaviour is described in section~\ref{p:exchange_message_with_actions} and provides a complete set of API to control the robot. Specifically, those used are:
+``Nav2'' is one navigation system compatible \gls{ROS}. A developer can choose to use their navigation system, but the one developed by~\citeauthor{paper:navigation2} is widely tested and supported~\cite{paper:navigation2}. It uses a set of actions whose behaviour is described in section~\ref{p:exchange_message_with_actions} and provides a complete set of API to control the robot. Specifically, those used are:
 \begin{itemize}
     \item \texttt{setInitialPose}: to set the initial position of the robot;
     \item \texttt{goToPose}: to tell to the robot to reach a position;
@@ -146,13 +146,17 @@ The first challenge to solve was the design and implementation of the hand gestu
 This diversity leads to two different neural networks to classify the hand gestures users are making. 
 
 \subsubsection{Static hand gestures}
-As reference, the set of static hand gestures chosen is the \gls{ASL} (in figure~\ref{fig:asl}). \textit{J} \textit{Z} are excluded because they involve a movement. To discriminate between dynamic and static gestures, I decided to prioritize the dynamic ones because users have to perform an action to activate them. Instead, with the static gestures, the hand does not move, and the recognizer will always return a possible prediction. Also, the numbers have been excluded. 
+As reference, the set of static hand gestures chosen is the \gls{ASL} (in figure~\ref{fig:asl}). \textit{J} and \textit{Z} are excluded because they involve a movement. To discriminate between dynamic and static gestures, I decided to prioritize the dynamic ones because users have to perform an action to activate them. Instead, with the static gestures, the hand does not move, and the recognizer will always return a possible prediction. Also, the numbers have been excluded. 
+
+\clearpage
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{thesis/images/asl.png}
-    \caption{\glsdesc{ASL}~\parencite{img:asl}}\label{fig:asl}
+    \caption{\glsdesc{ASL}~\parencite{img:asl}.}\label{fig:asl}
 \end{figure}
+
+\clearpage
 
 \paragraph{MediaPipe data}
 From MediaPipe, the static hand gesture recognizer gets twenty-one landmarks per frame. These landmarks are shown in figure~\ref{fig:landmarksMediapipe}. The dataset is a CSV file where each line contains:
@@ -283,12 +287,12 @@ The integration with \acrshort{ROS} is managed through two Python packages:
 \end{itemize}
 First and foremost the \textit{rclpy} is initialized with the statement \texttt{rclpy.init()}. Then, the hand gesture controller can either publish a message to a topic or set a goal for navigation based on the triggered automaton transition.
 \begin{itemize}
-    \item send a message: the topic, the message type, and the data for the message are taken from the transition details described in the automaton configuration file. Then, the correct publisher is retrieved and used to publish the message. This kind of action exploits the message exchange system of topics explained in section~\ref{p:exchange_message_with_topics};
-    \item set a navigation goal: the coordinates are taken from the transition details described in the automaton configuration file. Then, the position is given as input to the navigator which returns a feedback until the task is completed. When the task is completed, it return the status of the operation:
+    \item \textbf{send a message}: the topic, the message type, and the data for the message are taken from the transition details described in the automaton configuration file. Then, the correct publisher is retrieved and used to publish the message. This kind of action exploits the message exchange system of topics explained in section~\ref{p:exchange_message_with_topics};
+    \item \textbf{set a navigation goal}: the coordinates are taken from the transition details described in the automaton configuration file. Then, the position is given as input to the navigator which returns a feedback until the task is completed. When the task is completed, it return the status of the operation:
     \begin{itemize}
-        \item succeeded: if the robot reach the goal correctly;
-        \item cancelled: if the operators cancelled the task;
-        \item failed: if the robot can't reach the set goal for any reason.
+        \item \textbf{succeeded}: if the robot reach the goal correctly;
+        \item \textbf{cancelled}: if the operators cancelled the task;
+        \item \textbf{failed}: if the robot can't reach the set goal for any reason.
     \end{itemize}
 \end{itemize}
 
@@ -299,22 +303,25 @@ A command line interface is the first interface with which users interact. It as
     \item launch the learning mode asking which dataset is to be edited and other gesture's data;
     \item launch the macro mode asking if users want to execute an existing macro or to create a new one.
 \end{itemize}
-Figure~\ref{fig:activity_diagram_cli} show the complete flaw chart with all the possibilities for the users.
+Figure~\ref{fig:activity_diagram_cli} show the complete activity diagram with all the possibilities for the users.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{thesis/images/activity_diagram_cli.png}
-    \caption{Activity diagram of the command line interface}
+    \caption{Activity diagram of the command line interface.}
     \label{fig:activity_diagram_cli}
 \end{figure}
 
 When users select a mode that involves the use of the camera a window appears showing to them what the camera is watching, the number of FPS, the recognized gestures, and the selected mode. Moreover, it shows also the hand's landmarks (i.e. the black points), the joints between them, and the landmarks used for the history of key-points in green with a trail when the hand moves. Figure~\ref{fig:example_ui}, for example, shows the recognition of the gesture \textit{F} as static gesture and \textit{Static} as dynamic.
 
+\clearpage
+
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{thesis/images/UI.png}
-    \caption{User interface of the program when the webcam is used}
+    \caption{User interface of the program when the webcam is used.}
     \label{fig:example_ui}
 \end{figure}
+
 
 \section{Documentation}
 To make the system as understandable as possible a proper documentation has been written. To ensure its readiness \textit{MkDocs} has been used with the theme \textit{MkDocs Material} and \textit{Ligthgallery} to manage the images. Instead, to ensure its availability \textit{GitHub Pages} and \textit{GitHub Actions} have been used. In this way it is available for everyone.\footnote{\href{https://jjocram.github.io/hand-gesture/}{https://jjocram.github.io/hand-gesture/}} The documentation explains how to:

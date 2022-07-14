@@ -14,7 +14,7 @@ The system is composed of two components: a node that deals with  hand gesture r
     \item drop down a parcel;
     \item go to a predetermined position.
 \end{itemize}
-A letter identified positions and parcels. In this way, the \glsfirst{ASL} is exploitable in order to simulate the identification of positions and parcels.\\
+A letter identified positions and parcels. In this way, the \gls{ASL} is exploitable in order to simulate the identification of positions and parcels.\\
 Figure~\ref{fig:automata_for_commands} shows the transition diagram for the automaton designed to check the users input for these tasks. The alphabet is $\Sigma = \{[A-Z], go\_to, pick\_up, drop\_down\}$ and the states are:
 \begin{itemize}
     \item \textbf{$q_0$}: robot without parcel; 
@@ -118,7 +118,7 @@ full\_dataset\_dropout & 0.99                         & 0.01                    
          \caption{Loss in tests static hand gestures.}
          \label{fig:evaluation_loss_static_hand_gestures.}
      \end{subfigure}
-        \caption{Results graphs for the training of the static hand gesture recognizer}
+        \caption{Results graphs for the training of the static hand gesture recognizer.}
         \label{fig:results_graphs_static_hand_gestures}
 \end{figure}
 
@@ -275,7 +275,7 @@ A test has been performed to collect data on the use of system resources, in par
         \caption{RAM usage.}
         \label{fig:ram_usage_static_training}
     \end{subfigure}
-    \caption{System resource utilization during the static gesture recognizer training}
+    \caption{System resource utilization during the static gesture recognizer training.}
     \label{fig:system_resource_graphs_static_training}
 \end{figure}
 
@@ -294,16 +294,16 @@ A test has been performed to collect data on the use of system resources, in par
         \caption{RAM usage.}
         \label{fig:ram_usage_dynamic_training}
     \end{subfigure}
-    \caption{System resource utilization during the dynamic gesture recognizer training}
+    \caption{System resource utilization during the dynamic gesture recognizer training.}
     \label{fig:system_resource_graphs_dynamic_training}
 \end{figure}
 
 \section{Integration with ROS}
 Three incremental tests have been performed to test the correct integration with \gls{ROS}:
 \begin{enumerate}
-    \item message exchange: the first test was about the exchange of different messages when different gestures were recognized;
-    \item navigation system: the next step was the correct integration with the navigation system ``Nav2'' in a simple environment;
-    \item complex scenario: the last test carried on was on a more real scenario, a robot in a warehouse doing different tasks.
+    \item \textbf{message exchange}: the first test was about the exchange of different messages when different gestures were recognized;
+    \item \textbf{navigation system}: the next step was the correct integration with the navigation system ``Nav2'' in a simple environment;
+    \item \textbf{complex scenario}: the last test carried on was on a more real scenario, a robot in a warehouse doing different tasks.
 \end{enumerate}
 
 In these three tests the network topology was similar:
@@ -328,7 +328,7 @@ The first results achieved by integrating the framework with \gls{ROS} have been
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.4\textwidth]{thesis/images/initial_turtlesim.png}
-    \caption{TurtleSim}
+    \caption{TurtleSim.}
     \label{fig:initial_turtlesim}
 \end{figure}
 
@@ -396,7 +396,7 @@ The last test to carry on regarding the integration with \gls{ROS} was in a more
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{thesis/images/smallwarehouse.png}
-    \caption{AWS Robomaker's small warehouse Gazebo world}
+    \caption{AWS Robomaker's small warehouse Gazebo world.}
     \label{fig:small_warehouse_gazebo_world}
 \end{figure}
 
